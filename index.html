@@ -271,20 +271,6 @@
             color: #999;
         }
 
-        .modal-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: #fff;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #222;
-        }
-
-        .modal-title:empty,
-        .modal-title.na {
-            display: none;
-        }
-
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -307,20 +293,6 @@
             color: #444;
             font-size: 14px;
             letter-spacing: 2px;
-            margin-bottom: 20px;
-        }
-
-        .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 2px solid #222;
-            border-top-color: #4a1359;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
         }
 
         .toast {
@@ -352,15 +324,10 @@
         ::-webkit-scrollbar-thumb {
             background: #333;
         }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #444;
-        }
     </style>
 </head>
 <body>
     <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-spinner"></div>
         <div class="loading-text">LOADING GALLERY...</div>
     </div>
 
@@ -380,8 +347,6 @@
                 <img class="modal-image" id="modalImage" src="" alt="">
             </div>
             <div class="modal-info">
-                <div class="modal-title" id="modalTitle"></div>
-                
                 <div class="modal-meta" id="modalMeta"></div>
                 
                 <div class="info-section">
@@ -414,190 +379,78 @@
     <div class="toast" id="toast">Copied to clipboard</div>
 
     <script>
+        // Données des images (intégrées directement)
+        const IMAGE_DATA = [
+            { id: "SERONDA-PG-1", seed: "376960941", prompt: "A centered portrait photograph of a young woman with long, wavy dark brown hair standing in a pastel pink sleek bedroom millenial-style, while reading a book titled 'In Defense of Lost Causes' by Slavoj Žižek.", negative: "ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy" },
+            { id: "SERONDA-PG-10", seed: "26322115", prompt: "A weary individual slouched over a desk, head resting on arms, surrounded by scattered papers and a dim desk lamp casting long shadows.", negative: "ugly, anime, deformed, noisy, blurry, distorted" },
+            { id: "SERONDA-PG-100", seed: "24213521", prompt: "Vibrant Dark academia aesthetic oil painting embodying moody and mysterious atmosphere, epic fantasy elements.", negative: "ugly, deformed, noisy, blurry, distorted, out of focus" },
+            { id: "SERONDA-PG-1011", seed: "486752610", prompt: "surreal minimal collage, concept art, grim, dreamy, dark art, macabre, cool toned, grunge.", negative: "ugly, deformed, noisy, blurry, distorted" },
+            { id: "SERONDA-PG-1012", seed: "717360247", prompt: "Collage blending retrofuturism, surrealism, realism infused with fantasy elements.", negative: "ugly, deformed, noisy, blurry, distorted" },
+            { id: "SERONDA-PG-2045", seed: "950248608", prompt: "dreamy mood, Beautiful seductive smiling beautiful stunning fairy, intricated details.", negative: "ugly, anime, deformed, noisy, blurry" },
+            { id: "SERONDA-PG-3019", seed: "266384131", prompt: "Abstract composite photo design with watercolor textures, soft pastel colors, organic flowing shapes.", negative: "ugly, deformed, noisy, blurry, distorted" }
+        ];
+
         const REPO_OWNER = 'T0nt0o';
         const REPO_NAME = 'Promptofolio_Lore';
-        
-        // CSV data with REAL images from GitHub
-        const CSV_DATA = `File,Title,Prompt,Removed_From_Image,Model,Filter,Sampler,Seed,Source,Created
-SERONDA-PG-1,NA,"A centered portrait photograph of a young woman with long, wavy dark brown hair standing in a pastel pink sleek bedroom millenial-style, while reading a book titled 'In Defense of Lost Causes' by Slavoj Žižek.","ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy",Playground v2.5,Photorealism,DPM++ 2M Karras,376960941,Canvas,202409170524
-SERONDA-PG-10,NA,"A weary individual slouched over a desk, head resting on arms, surrounded by scattered papers and a dim desk lamp casting long shadows.","ugly, anime, deformed, noisy, blurry, distorted",Playground v2.5,Photorealism,DPM++ 2M Karras,26322115,Canvas,202409212227
-SERONDA-PG-100,NA,"Vibrant Dark academia aesthetic oil painting embodying moody and mysterious atmosphere, epic fantasy elements.","ugly, deformed, noisy, blurry, distorted, out of focus",Playground v2.5,Photorealism,DPM++ 2M Karras,24213521,Canvas,202409232315
-SERONDA-PG-1011,today is the day we say goodbye :(,"surreal minimal collage, concept art, grim, dreamy, dark art, macabre, cool toned, grunge.","ugly, deformed, noisy, blurry, distorted",Playground v2.5,Photorealism,DPM++ 2M Karras,486752610,Canvas,202409231558
-SERONDA-PG-1012,NA,"Collage blending retrofuturism, surrealism, realism infused with fantasy elements.","ugly, deformed, noisy, blurry, distorted",Playground v2.5,Photorealism,DPM++ 2M Karras,717360247,Canvas,202409231556
-SERONDA-PG-2045,NA,"dreamy mood, Beautiful seductive smiling beautiful stunning fairy, intricated details.","ugly, anime, deformed, noisy, blurry",Playground v2.5,Photorealism,DPM++ 2M Karras,950248608,Canvas,202409180412
-SERONDA-PG-3019,NA,"Abstract composite photo design with watercolor textures, soft pastel colors, organic flowing shapes.","ugly, deformed, noisy, blurry, distorted",Playground v2.5,Photorealism,DPM++ 2M Karras,266384131,Canvas,202409230523`;
-        
-        let galleryData = [];
-        let currentItem = null;
 
-        // Parse CSV data into array of objects
-        function parseCSV(text) {
-            const lines = text.trim().split('\n');
-            const headers = lines[0].split(',').map(h => h.trim());
-            const data = [];
-            
-            for (let i = 1; i < lines.length; i++) {
-                const line = lines[i];
-                if (!line.trim()) continue;
-                
-                const row = [];
-                let current = '';
-                let inQuotes = false;
-                
-                for (let j = 0; j < line.length; j++) {
-                    const char = line[j];
-                    if (char === '"') {
-                        inQuotes = !inQuotes;
-                    } else if (char === ',' && !inQuotes) {
-                        row.push(current.trim());
-                        current = '';
-                    } else {
-                        current += char;
-                    }
-                }
-                row.push(current.trim());
-                
-                const item = {};
-                headers.forEach((header, idx) => {
-                    item[header] = row[idx] || '';
-                });
-                
-                data.push(item);
-            }
-            
-            return data;
-        }
+        let currentImage = null;
 
-        // Create a map for quick lookup by filename
-        function createDataMap(data) {
-            const dataMap = {};
-            data.forEach(item => {
-                dataMap[item.File] = item;
-            });
-            return dataMap;
-        }
-
-        // Get thumbnail URL based on file number
-        function getThumbUrl(fileId) {
-            const num = parseInt(fileId.replace('SERONDA-PG-', ''), 10);
+        // Obtenir l'URL de l'image thumbnail
+        function getImageUrl(imageId) {
+            const num = parseInt(imageId.replace('SERONDA-PG-', ''), 10);
             
             if (num < 1011) {
-                // thumbnails1: "Seronda-PG-X.jpg" (no zero-padding, mixed case)
+                // thumbnails1: "Seronda-PG-X.jpg"
                 return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/thumbnails1/Seronda-PG-${num}.jpg`;
             } else if (num < 2045) {
-                // thumbnails2: "SERONDA-PG-XXXX.jpg" (uppercase, no zero-padding for 1011-1012)
-                return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/thumbnails2/${fileId}.jpg`;
+                // thumbnails2: "SERONDA-PG-XXXX.jpg"
+                return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/thumbnails2/${imageId}.jpg`;
             } else if (num < 3019) {
-                // thumbnails3: "SERONDA-PG-XXXX.jpg" (uppercase)
-                return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/thumbnails3/${fileId}.jpg`;
+                // thumbnails3: "SERONDA-PG-XXXX.jpg"
+                return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/thumbnails3/${imageId}.jpg`;
             } else {
-                // thumbnails4: "SERONDA-PG-XXXX.jpg" (uppercase)
-                return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/thumbnails4/${fileId}.jpg`;
+                // thumbnails4: "SERONDA-PG-XXXX.jpg"
+                return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/thumbnails4/${imageId}.jpg`;
             }
         }
 
-        // Get big image URL based on file number
-        function getBigUrl(fileId) {
-            const num = parseInt(fileId.replace('SERONDA-PG-', ''), 10);
-            
-            if (num >= 3019) {
-                return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/Big4/${fileId}.jpg`;
-            } else if (num >= 2045) {
-                return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/Big3/${fileId}.jpg`;
-            }
-            
-            return null;  // No big version for numbers < 2045
-        }
-
-        // Check if file has a big version
-        function hasBigVersion(fileId) {
-            const num = parseInt(fileId.replace('SERONDA-PG-', ''), 10);
-            return num >= 2045;
-        }
-
-        function createGalleryItem(currentItem, dataMap) {
+        // Créer un élément de galerie
+        function createGalleryItem(imageId, imageInfo) {
             const div = document.createElement('div');
             div.className = 'gallery-item';
-            
-            const imageUrl = getThumbUrl(currentItem.File);
-            
-            div.onclick = () => {
-                // Look up the item by File ID in the data map
-                const correctItem = dataMap[currentItem.File];
-                console.log('Clicked:', currentItem.File, 'Data:', correctItem);
-                
-                if (hasBigVersion(currentItem.File)) {
-                    const bigUrl = getBigUrl(currentItem.File);
-                    openModal(correctItem, bigUrl);
-                } else {
-                    openModalWithoutImage(correctItem);
-                }
+
+            const imgUrl = getImageUrl(imageId);
+
+            div.onclick = function() {
+                currentImage = imageInfo;
+                document.getElementById('modalImage').src = imgUrl;
+                document.getElementById('modalImage').style.display = 'block';
+                showImageInfo(imageInfo);
+                document.getElementById('modal').classList.add('active');
+                document.body.style.overflow = 'hidden';
             };
-            
+
             const img = document.createElement('img');
-            img.src = imageUrl;
-            img.alt = currentItem.File;
+            img.src = imgUrl;
+            img.alt = imageId;
             img.loading = 'lazy';
-            img.onerror = () => {
-                console.error('Failed to load:', imageUrl);
+            img.onerror = function() {
                 div.classList.add('error');
-                div.innerHTML = `<div class="error-icon">?</div>`;
+                div.innerHTML = '<div class="error-icon">?</div>';
             };
-            
+
             div.appendChild(img);
-            
             return div;
         }
 
-        function openModal(item, bigUrl) {
-            currentItem = item;
-            
-            const img = document.getElementById('modalImage');
-            img.src = bigUrl;
-            img.style.display = 'block';
-            img.onerror = () => {
-                console.error('Failed to load big image:', bigUrl);
-                img.style.display = 'none';
-            };
-            
-            showModalInfo(item);
-            document.getElementById('modal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function openModalWithoutImage(item) {
-            currentItem = item;
-            
-            const img = document.getElementById('modalImage');
-            img.src = '';
-            img.style.display = 'none';
-            
-            showModalInfo(item);
-            document.getElementById('modal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function showModalInfo(item) {
-            // Display title if it exists and is not "NA"
-            const titleEl = document.getElementById('modalTitle');
-            if (item.Title && item.Title !== 'NA') {
-                titleEl.textContent = item.Title;
-                titleEl.classList.remove('na');
-            } else {
-                titleEl.textContent = '';
-                titleEl.classList.add('na');
-            }
-            
+        function showImageInfo(info) {
             const metaHtml = `
-                <div class="meta-item">Model: <span>${item.Model || 'N/A'}</span></div>
-                <div class="meta-item">Sampler: <span>${item.Sampler || 'N/A'}</span></div>
-                <div class="meta-item">Filter: <span>${item.Filter || 'N/A'}</span></div>
+                <div class="meta-item">ID: <span>${info.id}</span></div>
             `;
             document.getElementById('modalMeta').innerHTML = metaHtml;
-            
-            document.getElementById('modalSeed').textContent = item.Seed || 'N/A';
-            document.getElementById('modalPrompt').textContent = item.Prompt || 'N/A';
-            document.getElementById('modalNegative').textContent = item['Removed_From_Image'] || 'N/A';
+            document.getElementById('modalSeed').textContent = info.seed;
+            document.getElementById('modalPrompt').textContent = info.prompt;
+            document.getElementById('modalNegative').textContent = info.negative;
         }
 
         function closeModal() {
@@ -607,71 +460,49 @@ SERONDA-PG-3019,NA,"Abstract composite photo design with watercolor textures, so
         }
 
         function copyToClipboard(text, btn) {
-            navigator.clipboard.writeText(text).then(() => {
+            navigator.clipboard.writeText(text).then(function() {
                 btn.textContent = 'Copied!';
                 btn.classList.add('copied');
-                setTimeout(() => {
+                setTimeout(function() {
                     btn.textContent = 'Copy';
                     btn.classList.remove('copied');
                 }, 2000);
-                
                 const toast = document.getElementById('toast');
                 toast.classList.add('show');
-                setTimeout(() => toast.classList.remove('show'), 2000);
+                setTimeout(function() { toast.classList.remove('show'); }, 2000);
             });
         }
 
         function copyPrompt() {
-            const btn = event.target;
-            copyToClipboard(currentItem.Prompt || 'N/A', btn);
+            copyToClipboard(currentImage.prompt, event.target);
         }
 
         function copyNegative() {
-            const btn = event.target;
-            copyToClipboard(currentItem['Removed_From_Image'] || 'N/A', btn);
+            copyToClipboard(currentImage.negative, event.target);
         }
 
         function copySeed() {
-            const btn = event.target;
-            copyToClipboard(currentItem.Seed || 'N/A', btn);
+            copyToClipboard(currentImage.seed, event.target);
         }
 
-        document.addEventListener('keydown', (e) => {
+        document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeModal();
         });
 
-        document.getElementById('modal').addEventListener('click', (e) => {
+        document.getElementById('modal').addEventListener('click', function(e) {
             if (e.target === document.getElementById('modal')) closeModal();
         });
 
+        // Initialiser la galerie
         function initGallery() {
-            try {
-                // Parse CSV data
-                galleryData = parseCSV(CSV_DATA);
-                const dataMap = createDataMap(galleryData);
-                const gallery = document.getElementById('gallery');
-                
-                console.log('Gallery data:', galleryData);
-                console.log('Data map:', dataMap);
-                
-                galleryData.forEach(csvItem => {
-                    if (csvItem.Prompt && csvItem.Prompt !== 'NA') {
-                        const galleryItem = createGalleryItem(csvItem, dataMap);
-                        gallery.appendChild(galleryItem);
-                    }
-                });
-                
-                document.getElementById('loadingOverlay').classList.add('hidden');
-                
-            } catch (error) {
-                console.error('Error loading gallery:', error);
-                document.getElementById('loadingOverlay').innerHTML = `
-                    <div style="text-align:center;padding:40px 20px;color:#666;">
-                        <div style="color:#f55;font-size:18px;margin-bottom:15px;">ERROR</div>
-                        <div>${error.message}</div>
-                    </div>
-                `;
-            }
+            const gallery = document.getElementById('gallery');
+            
+            IMAGE_DATA.forEach(function(imageInfo) {
+                const item = createGalleryItem(imageInfo.id, imageInfo);
+                gallery.appendChild(item);
+            });
+            
+            document.getElementById('loadingOverlay').classList.add('hidden');
         }
 
         initGallery();
