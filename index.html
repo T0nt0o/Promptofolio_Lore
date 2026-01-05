@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lore Playground Gallery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #050505;
+            color: #e5e5e5;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+            border-bottom: 1px solid #222;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #d4af37, #ffb6c1, #d4af37, #ffb6c1, #d4af37);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: metallic 3s linear infinite;
+            letter-spacing: 2px;
+        }
+
+        @keyframes metallic {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .subtitle {
+            font-size: 10px;
+            color: #666;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Gallery Container */
+        .gallery-container {
+            padding-top: 50px;
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-bottom: 40px;
+        }
+
+        /* Gallery Grid */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 6px;
+        }
+
+        .gallery-item {
+            position: relative;
+            aspect-ratio: 1;
+            overflow: hidden;
+            cursor: pointer;
+            background: #111;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease, filter 0.3s ease;
+            filter: grayscale(30%);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+            filter: grayscale(0%);
+        }
+
+        .gallery-item .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #444;
+            font-size: 12px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 1400px;
+            margin: auto;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        @media (min-width: 900px) {
+            .modal-content {
+                flex-direction: row;
+                align-items: flex-start;
+            }
+        }
+
+        .modal-image-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .modal-image {
+            max-width: 100%;
+            max-height: 60vh;
+            object-fit: contain;
+            border: 1px solid #222;
+        }
+
+        .modal-info {
+            flex: 0 0 400px;
+            max-width: 100%;
+            background: #0a0a0a;
+            border: 1px solid #222;
+            padding: 20px;
+        }
+
+        .modal-close {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 28px;
+            cursor: pointer;
+            z-index: 2001;
+            transition: color 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+        }
+
+        .modal-close:hover {
+            color: #fff;
+        }
+
+        .info-section {
+            margin-bottom: 20px;
+        }
+
+        .info-label {
+            font-size: 10px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-value {
+            font-size: 13px;
+            color: #ccc;
+            line-height: 1.5;
+            word-break: break-word;
+            max-height: 150px;
+            overflow-y: auto;
+            padding: 12px;
+            background: #111;
+            border: 1px solid #222;
+        }
+
+        .copy-btn {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #888;
+            padding: 6px 12px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .copy-btn:hover {
+            background: #2d1b4e;
+            border-color: #4a1359;
+            color: #fff;
+        }
+
+        .copy-btn.copied {
+            background: #1b4e2d;
+            border-color: #2d7a4e;
+            color: #8f8;
+        }
+
+        .seed-value {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #d4af37;
+            background: #111;
+            padding: 12px;
+            border: 1px solid #222;
+        }
+
+        .modal-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #222;
+        }
+
+        .meta-item {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .meta-item span {
+            color: #999;
+        }
+
+        /* Loading */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #050505;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+        }
+
+        .loading-overlay.hidden {
+            display: none;
+        }
+
+        .loading-text {
+            color: #444;
+            font-size: 14px;
+            letter-spacing: 2px;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1b4e2d;
+            color: #8f8;
+            padding: 12px 24px;
+            font-size: 13px;
+            border: 1px solid #2d7a4e;
+            z-index: 4000;
+            transition: transform 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #111;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #444;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-text">LOADING GALLERY...</div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">LORE</div>
+        <div class="subtitle">Playground gallery</div>
+    </header>
+
+    <!-- Gallery -->
+    <div class="gallery-container">
+        <div class="gallery" id="gallery"></div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <div class="modal-content">
+            <div class="modal-image-container">
+                <img class="modal-image" id="modalImage" src="" alt="">
+            </div>
+            <div class="modal-info">
+                <div class="modal-meta" id="modalMeta"></div>
+                
+                <div class="info-section">
+                    <div class="info-label">
+                        Seed
+                        <button class="copy-btn" onclick="copySeed()">Copy</button>
+                    </div>
+                    <div class="seed-value" id="modalSeed"></div>
+                </div>
+
+                <div class="info-section">
+                    <div class="info-label">
+                        Prompt
+                        <button class="copy-btn" onclick="copyPrompt()">Copy</button>
+                    </div>
+                    <div class="info-value" id="modalPrompt"></div>
+                </div>
+
+                <div class="info-section">
+                    <div class="info-label">
+                        Negative
+                        <button class="copy-btn" onclick="copyNegative()">Copy</button>
+                    </div>
+                    <div class="info-value" id="modalNegative"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">Copied to clipboard</div>
+
+    <script>
+        // Configuration
+        const BASE_URL = 'https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore';
+        const ITEMS_PER_BRANCH = 859;
+        
+        // ===== DONNÉES CSV INTÉGRÉES =====
+        const CSV_DATA = `File,Title,Prompt,Removed_From_Image,Model,Filter,Sampler,Seed,Source,Created
+SERONDA-PG-0001,NA,"A surreal illustration features a young woman with long, straight black hair and bangs sitting at an abstractly designed table holding a delicate teacup adorned with intricate blue and gold patterns. Her large, expressive eyes are accentuated with vibrant rainbow-colored makeup, creating a mesmerizing effect against her pale skin. The woman has a contemplative expression, gazing downward as she holds the cup with both of her anatomically perfect hands. She wears a colorful, floral-patterned top with elaborate designs in shades of green, orange, pink, yellow, purple, and red on the sleeves. On the table, there are three cups of coffee or tea, each uniquely styled. A light green cup with ridged edges sits on a saucer to the left, filled with steaming light brown liquid. An orange-brown cup with dark brown liquid is centrally placed on a white saucer. To the right, another peach-colored cup rests on a saucer. The background depicts a cosmic scene filled with swirling nebulae, planets, stars, and other celestial elements. These include an amber-orange spiral planet in the upper left corner, variously sized spherical objects in shades of red, green, and blue scattered throughout, and abstract, colorful cloud-like formations intertwining in vibrant hues of green, blue, pink, purple, yellow, and orange. Small crescent moons and floating flowers are interspersed among the starry expanse. A small boat-shaped object containing mysterious symbols floats near the top left, while two abstract shapes resembling faces or mask-like figures appear in the bottom right corner. The overall mood is dreamy, ethereal, and introspective, enhanced by the high contrast between the vivid colors of the foreground and the deep blacks of the cosmic backdrop. The composition blends realistic portrait elements with fantastical cosmic imagery, creating a whimsical and otherworldly atmosphere that emphasizes the surreal quality of the artwork.","ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, extra limbs, EXTRA FINGERS, awkward hands, poorly drawn face, poorly drawn hands, missing fingers, nudity, nude",Playground v3 (beta),NA,NA,678665420,NA,202409240514
+SERONDA-PG-0002,Discord user: Seronda,"I just want to say I'll remain here watching your amazing art. I'll be mentioning for ours if I had to make a list of all the creators I admire and follow, and are everyday a source of inspiration and a reminder that there's always something beautiful around you, if you know where to look. In case someone wants to chat or figure out what I am going to do next, where I'll keep creating (I have no clue at this moment), my discord user is "" seronda","ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,816374566,Canvas,202409240322
+SERONDA-PG-0003,The end is now,"The Devil and God Are Raging Inside Me, in weathered wall, textures, grunge, by Broad strokes, in the style of SCAF","ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,841163169,Canvas,202409240316
+SERONDA-PG-0004,NA,"In the style of Aykut Aydogdu, Odilon Redon and Alexander Kemp. Colorful gothic photoillustration, ultra-surreal. Volumetric lighting.","ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,483069198,Canvas,202409240256
+SERONDA-PG-0005,NA,"Concept art featuring a beautiful woman superimposed against a maximalist landscape, her form exuding a surreal minimal collage aesthetic, palette consists of cool tones and grim, dreamy undercurrents, the art is macabre with undertone of grunge, mastered in the luminescent style of Catrin Welz-Stein meets Naoko Takeuchi, designed with profound chromatic aberration, enigmatic liminal spaces, double exposure effect","ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,304673368,Canvas,202409240138
+SERONDA-PG-0006,NA,"Assembly of evocative horror imagery, a portrait captures the uncanny dance of a disembodied Asian woman blended with nightmarish floral elements, in the enigmatic styles reminiscent of Jan Švankmajer, HR Giger, Stephen Gammell, Emil Melmoth, Angelina Wrona, Tomás Saraceno, Sopheap Pich, Liam Gillick, and Naoto Hattori, composed in wide","ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,753249201,Canvas,202409240056
+SERONDA-PG-0007,NA,"Concept art featuring a beautiful woman superimposed against a maximalist landscape, her form exuding a surreal minimal collage aesthetic, palette consists of cool tones and grim, dreamy undercurrents, the art is macabre with undertone of grunge, mastered in the luminescent style of Catrin Welz-Stein meets Naoko Takeuchi, designed with profound chromatic aberration, enigmatic liminal spaces, double exposure effect","ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,99478726,Canvas,202409232331
+SERONDA-PG-0008,NA,"Vibrant Dark academia aesthetic oil painting embodying moody and mysterious atmosphere, epic fantasy elements weave through the whimsical and dreamy vintage composition, style influenced by Pablo Amaringo, Emil Melmoth, cinematic ambiance, dramatic lighting, high contrast, chiaroscuro effects, immersive depth of field, rich textures, gothic","ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,24213521,Canvas,202409232315
+SERONDA-PG-0009,NA,"In the style Odilon Redon, Moebius, Macabre portraiture, the beautiful and the grotesque interwoven in a frenetic ecstatic neverending dance to bring out a portrait of woman in decay and decadence. In the dark style of Marco Mazzoni fused with the distressed photo style of John Batho. Melancholic brooding atmosphere. Grunge moody cool toned desaturated color palette. Textured.","ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,767320438,Canvas,202409232301
+SERONDA-PG-0010,NA,"In the style of Aykut Aydogdu, Odilon Redon and Alexander Kemp. Colorful gothic photoillustration, ultra-surreal. Volumetric lighting.","ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,177484200,Canvas,202409231931
+SERONDA-PG-0011,today is the day we say goodbye :(,"surreal minimal collage, concept art, grim, dreamy, dark art, macabre, cool toned, grunge, Stylized painting surreal colors, chromatic aberration. double exposure effect, a beautiful woman superimposed against a maximalist landscape, liminal space, In the style of, Catrin Welz-Stein, burtonian, Naoko Takeuchi","ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,486752610,Canvas,202409231558
+SERONDA-PG-0012,NA,"Collage blending retrofuturism, surrealism, realism infused with fantasy elements, domme centrally positioned amidst anachronistic devices, ethereal creatures mingling with Art Deco shapes, dreamlike cityscape backdrop, neon hues contrasting monochrome palette, photomontage, digital painting, octane rendering","ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,717360247,Canvas,202409231556
+SERONDA-PG-0013,NA,"In the style of Aykut Aydogdu, Odilon Redon and Alexander. Colorful gothic photoillustration, surreal. Volumetric lighting.","ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,701020909,Canvas,202409230806
+SERONDA-PG-0014,NA,"Woman embodying decay and decadence in a dance of macabre portraiture, fusion of Marco Mazzoni's dark style with John Batho's photo-distressed technique, melancholic, brooding atmosphere, grunge mood, cool-toned desaturated color palette, textured, ecstatic yet never-ending dance portrayed, ultra fine, dramatic lighting.","ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,719484576,Canvas,202409230527
+SERONDA-PG-0015,NA,"Abstract composite photo design with watercolor textures, soft pastel colors, organic flowing shapes, close up, focus on, copy space, double exposure silhouette with creative natural elements.","ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,266384131,Canvas,202409230523
+SERONDA-PG-0016,NA,"Imagine a collage of retrofuturistic and surreal elements that have been blended with stark realism, dictated by a dominant theme of a 'Domme'. Positioned across the composition, these elements talk of power, control, authority, expressed through iconic retrofuturist symbols, surreal visuals, and hyper-realistic fantasy aspects. Encapsulate the key themes of retrofuturism and surrealism along with pronounced elements of","ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,201372862,Canvas,202409230306
+SERONDA-PG-0017,NA,NA,NA,NA,NA,NA,NA,Canvas,202409230255
+SERONDA-PG-0018,NA,"Vaporwave nostalgia merges with maximalist landscapes, surreal colors clash and harmonize, cool-toned grunge aesthetic infuses a dreamlike Burtonian atmosphere as a retro anime woman finds herself superimposed against a chromatic aberration world, the backdrop a fusion of liminal space and Naoko Takeuchi's influence, with a touch of Catrin Welz-Stein's imaginative approach, double exposure, styl","ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,203692857,Canvas,202409222352
+SERONDA-PG-0019,DT: Guardians of the Galaxy,"Princess Guardian of the Galaxy. Full height portrait of a beautiful woman dressed as a futuristic interpretation of Sailor Moon, backlighting with an angelic glow halo, action pose, dynamic poster, kinetic art, ready to fight to defend the galaxy, embossed, charming, dignified, and superimposed against the vast space, grunge texture, a double exposure effect for a dreamy quality, surreal colors, retro galaxy background, dramatic lighting, ultra fine. digital illustration. in the style of artgerm, rossdraws, tanya shatseva, celestialpunk","ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Stable Diffusion XL,Photorealism,DPM++ 2M Karras,381046647,Canvas,202409220843
+SERONDA-PG-0020,NA,NA,NA,NA,NA,NA,NA,Canvas,202409220818
+SERONDA-PG-0021,NA,"Quirky, beautiful alien bartender, pours cosmic beverages at an interstellar rest stop, humanoid features, captivates patrons with a graceful, alluring posture, pastel-tinted environment exudes liveliness and lightness, a touch sensuous, eclectic mix of alien species rendezvousing, creating a tapestry of intergalactic conviviality, digital painting, vibrant colors, soft lighting","ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,104095834,Canvas,202409220348
+SERONDA-PG-0022,NA,"Mist-enveloped forest under starlight, creek murmurs gentle, mirror-like reflections, leaves whispering secrets, palette of star-kissed autumn leaves meeting the mystique of a night sky, outlined by the calligraphic touch of Grim Grinser, Gustaf Tenggren's influence felt through diffuse illumination casting an ethereal glow, evoking a poignant, spiritual communion with nature, enhanced by the","ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,758971523,Canvas,202409220047
+SERONDA-PG-0023,NA,"Forest photo-illustration capturing peaceful serenity, leaves rustling, creek babbling, enveloped in a misty atmosphere akin to a dreamscape, offering stillness amidst chaos, intricate play of highlights and shadows, volumetric autumn colors, crafted with a Dan Hillier, Sean Bagshaw, Aaron Reed's artistic touch, captured with the precision of a Hasselblad X2D 100C, HDR","ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,465814145,Canvas,202409220029
+SERONDA-PG-0024,NA,"Digital art, forest scene bathed in serenity, leaves whispering softly, creek babbling rhythmically, mist weaving through trees adding to the ethereal mood, spotlighting tranquility amidst daily hustle, Dan Hillier meets Sean Bagshaw and Aaron Reed, Hasselblad X2D 100C, high dynamic range, raw file format, 55mm lens, complex focus, HDR processing, deep contrast, beautifully","ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,754943686,Canvas,202409220029
+SERONDA-PG-0025,NA,"Serene forest photo-illustration with rustling leaves, running creek, soothing sounds, misty setting, digital art in the style of Doppler effect, sense deprivation, volumetric autumn colors, intricate highlights and shadows, depicting a refuge of stillness, reminiscent of Dan Hillier, Sean Bagshaw, Aaron Reed, shot on Hasselblad X2D 100C, ultra high definition, high dynamic range","ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,465484550,Canvas,202409220027
+SERONDA-PG-0026,NA,"Peaceful serene forest, illustration reflecting rustling leaves, streaming creek, soothing sounds, mist-enveloped ambiance, digital art echoing Doppler effect, sense deprivation, volumetric autumn hues, accentuating highlights and shadows, inspired by Dan Hillier, Sean Bagshaw, Aaron Reed, captured through Hasselblad X2D 100C, UHD, HDR, RAW, 55mm lens","ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,822598868,Canvas,202409220026
+SERONDA-PG-0027,NA,"A slumbering figure cradling the heaviness of fatigue in a plain gray room, soft diffused lighting casting gentle shadows across the form, texture of worn fabric, muted color palette, sense of quiet solitude, soft focus, ultra realistic.","ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,256895942,Canvas,202409212240
+SERONDA-PG-0028,NA,"Sign displaying the words ""I am very tired"" in weary, drooping typography, hues of deep blue and gray, heavy shadows casting over each letter, placed on a sleep-deprived person's desk drowned in the glow of a single dim desk lamp, surrounded by scattered coffee cups, empty snack wrappers, and crumpled papers, illustrating a late-night struggle with fatigue, digital painting, dramatic lighting, ultra realistic","ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,613979196,Canvas,202409212230
+SERONDA-PG-0029,NA,"A pint-sized panda placidly cradling a steaming, mismatched teacup, vulnerability etched in its brown, button-like eyes as it expresses the profound weariness in its heart, Chinese-style room, bamboo detailing, splashed with tea hues, ink wash painting, ink-dipped brushes, traditional ambiance, sepia tone, vintage feel, delicate shading, high contrast, meticulous attention to details.","ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,444564094,Canvas,202409212228
+SERONDA-PG-0030,NA,"A weary individual slouched over a desk, head resting on arms, surrounded by scattered papers and a dim desk lamp casting long shadows, expression of exhaustion, backlighting highlights silhouette, sepia tones, chiaroscuro effect, digital illustration.","ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,26322115,Canvas,202409212227
+SERONDA-PG-0031,NA,NA,NA,NA,NA,NA,NA,Canvas,202409202338
+SERONDA-PG-0032,NA,"westernpunk, wild wild west intense red landscape surreal pastoral sci-fi, retrofuturistic, cowboy core, desertscape, golden hour, red skies, ultra-surreal, strange, radiant burning sun","ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,241221024,Canvas,202409202326
+SERONDA-PG-0033,"Playground's greatest Hits, vol.2 - Mess","*** Join the first PG flashmob anniversary, and possibly the last! To celebrate, participants have chosen to revive the album covers theme. So, grab your mouse or your stylus, and create a parody of your favorite (or not-so-favorite) album cover.","ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Stable Diffusion XL,NA,DPM++ 2M Karras,584299265,Canvas,202409202307
+SERONDA-PG-0034,Cosmic Chess,"chessboard floating in the galaxy, close-up, dreamy cosmic atmosphere, vibrant cool toned hues, sci-fi, whimsical, the chess pieces are dressed as astronauts, ultra-fine, original concept, digital matte painting","ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,NA,DPM++ 2M Karras,810214972,Canvas,202409200618
+SERONDA-PG-0035,pillows,"fashion photography, woman with electric blue hair and red lipstick, setting in bed holding up enormous white pillow to her waist as if she is off the bottom of it. Has blue patterns on her tights like blue and white china porcelain, in the style of Ray Caesar, with soft colors.","ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,911166566,Canvas,202409200506
+SERONDA-PG-0036,NA,NA,NA,NA,NA,NA,NA,Canvas,202409192325
+SERONDA-PG-0037,NA,"Grunge-style acrylic dreamscape evoking Twilight Tales, starry sky mingling with stardust and chaotic energy threads from which stars whimsically hanging from the sky, folk fairytale elements intertwine, lisa aisato, Patricia Ariel, Bri Buckley, naive","ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,960112690,Canvas,202409191844
+SERONDA-PG-0038,DT: Festival of lights,"A festive photograph capturing two young women engaged in creating a traditional Diwali rangoli design at night. The women are dressed in vibrant traditional Indian outfits, with the woman on the left wearing an orange saree with green accents and a matching dupatta, adorned with silver bangles, earrings, and a maang tikka. The woman on the right is dressed in a yellow-orange saree with intricate designs and accessories, including bangles, a necklace, earrings, and a maang tikka. Both women possess beautiful detailed faces with distinctive features. Their eyes are half-closed, contributing to the spiritual transcending character of the task they are performing. Their hands are perfectly anatomically correct. They are seated on the ground, leaning over a colorful rangoli design composed of vibrant powders arranged in intricate patterns, including flowers, leaves, and geometric shapes. The design features a central arrangement of small lit candles in various colored bowls, casting a warm glow over the scene. The surrounding powders are arranged in shades of red, blue, green, yellow, purple, pink, and orange, creating a visually striking and textured surface. The background is dark, emphasizing the illuminated designs and the women's faces, which are softly lit by the candlelight. The overall mood is celebratory and joyous, capturing the essence of the festival and the shared activity of the women. The photograph is taken from a slightly elevated angle, providing a clear view of the intricate details of the rangoli and the traditional attire of the women.","ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, extra limbs, poorly drawn face, hands, fingers, nudity, nude",Playground v3 (beta),NA,NA,105713297,NA,202409190622
+SERONDA-PG-0039,NA,"deranged japanese punk beautiful singer, mixed media, line art and acrylic, textured, thick layers that add to the grungy gritty effect, action pose, desaturated cool colors, by Caricature art, palette knife, dry","ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Watercolor,DPM++ 2M Karras,481823407,Canvas,202409190528
+SERONDA-PG-0040,Canvas dump,"deranged japanese punk beautiful singer, mixed media, line art and acrylic, textured, thick layers that add to the grungy gritty effect, action pose, desaturated cool colors, by Caricature art, palette knife, dry","ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,440504516,Canvas,202409181934
+SERONDA-PG-0041,DT: Blooming Biomes,"Wide shot photoillustration combining Dan Hillier's, Andreas Lie's, and Android Jones's styles depicting diverse biomes merging into a magical otherworldly landscape, showcasing intricate flora and vegetation in a biological dance, sci-fi theme with a retro and vintage flair, captured during the silver hour, moonlit and starlit ambiance, with complex contrast, interplay of light and shadow creating an amazing breeht","ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,NA,DPM++ 2M Karras,172640363,Canvas,202409180953
+SERONDA-PG-0042,NA,"dreamy mood, dreamy atmosphere, Beautiful seductive smiling beautiful stunning fairy by agnes cecile julie doucet moebius, intricated details, sitting, facing camera, hair styled in a bun, bend over posture, full body portrait, extremely luminous bright design, soft colours, by Karol Bak and Jean-Baptiste Monge","ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,950248608,Canvas,202409180412
+SERONDA-PG-0043,NA,"dreamy mood, dreamy atmosphere, Beautiful seductive smiling beautiful stunning fairy by agnes cecile julie doucet moebius, intricated details, sitting, facing camera, hair styled in a bun, bend over posture, full body portrait, extremely luminous bright design, soft colours, by Karol Bak and Jean-Baptiste Monge","ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,142493791,Canvas,202409180411
+SERONDA-PG-0044,NA,"dreamy atmosphere, cool toned, blue hour, grunge, gritty, on textured worn canvas, layered acrylic, concept art of Twilight Tales, stories and history under the starry sky, stardust, folk fairytale fantasy, chaos magik, magic realism, magical, evocative, ethereal glowin the style of Craola, Arthur Rackham, Anna Dittmann, remedios varo, Mira Nedyalkova, Catrin Welz-Stein, burtonian touch","ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,354914614,Canvas,202409172229
+SERONDA-PG-0045,Canvas dump,"dreamy mood, dreamy atmosphere, Beautiful seductive smiling beautiful stunning fairy by agnes cecile julie doucet moebius, intricated details, sitting, facing camera, hair styled in a bun, bend over posture, full body portrait, extremely luminous bright design, soft colours, by Karol Bak and Jean-Baptiste Monge","ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,228870659,Canvas,202409172002
+SERONDA-PG-0046,Canvas dump,NA,NA,NA,NA,NA,NA,Canvas,202409171949
+SERONDA-PG-0047,Canvas dump,"Otherworldly forest spirit, female, glowing luminously in a dreamy forest atmosphere, hair in a blonde bun, showcasing perfect hand touching a branch, draped in a long white gown speckled with morning dew, amid a triadic dusk setting, ethereal backlighting painting the scene, Luis Royo and Daria Endresen-inspired, photorealistic, hyper realistic, ultra clear, dramatic lighting.","ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,97120741,Canvas,202409171941
+SERONDA-PG-0048,DT: Glistening Glaciers,"Glistening glaciers, sf, fantasy, iridiscent reflects on the ice and the surface of the frozen water. at dusk. with beautiful gradient blue hues in the sky, from pastel to vivid brights, from bright to deep and dark, blue hour, chaotic stunning interplay of light and shadow donning an ethereal magical flair to the digital art. UHD.","ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Watercolor,DPM++ 2M Karras,785042786,Canvas,202409170844
+SERONDA-PG-0049,Reading Zizek,"A centered portrait photograph of a young woman with long, wavy dark brown hair standing in a pastel pink sleek bedroom millenial-style, while reading a book titled 'In Defense of Lost Causes' by Slavoj Žižek. The book is open, with the title and author's name clearly visible in large, bold black text on the front cover. The woman's expression is focused and concentrated, with her eyes intently on the pages and her lips slightly parted. She is wearing a dark navy blue sleeveless dress with a high-waisted belt tied into a bow at the waist, creating a subtle but defined silhouette. Her hands are positioned with one holding the left side of the book and the other the right side, gripping it gently as she reads. The lighting is soft and even, illuminating her face and upper body without casting harsh shadows, creating a calm and intellectual mood. The image has a shallow depth of field, keeping the woman and the book in sharp focus while the background remains slightly blurred. The overall composition centers the subject and the book, capturing her from the waist up and emphasizing her engagement with the reading material.","ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth",Playground v2.5,Photorealism,DPM++ 2M Karras,376960941,Canvas,202409170524`;
+        
+        let galleryData = [];
+        let currentItem = null;
+
+        // Branch distribution
+        function getBranch(index) {
+            return Math.floor(index / ITEMS_PER_BRANCH) + 1;
+        }
+
+        // Parse CSV
+        function parseCSV(text) {
+            const lines = text.trim().split('\n');
+            const headers = lines[0].split(',').map(h => h.trim());
+            const data = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i];
+                if (!line.trim()) continue;
+                
+                // Handle quoted fields with commas
+                const row = [];
+                let current = '';
+                let inQuotes = false;
+                
+                for (let j = 0; j < line.length; j++) {
+                    const char = line[j];
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        row.push(current.trim());
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+                row.push(current.trim());
+                
+                const item = {};
+                headers.forEach((header, idx) => {
+                    item[header] = row[idx] || '';
+                });
+                
+                data.push(item);
+            }
+            
+            return data;
+        }
+
+        // Generate image URL
+        function getImageUrl(filename, type) {
+            const branch = getBranch(galleryData.findIndex(item => item.File === filename));
+            const branchNum = Math.min(branch, 4);
+            const folder = type === 'big' ? `Big${branchNum}` : `thumbnails${branchNum}`;
+            return `${BASE_URL}/${folder}/${filename}`;
+        }
+
+        // Create gallery item
+        function createGalleryItem(item, index) {
+            const div = document.createElement('div');
+            div.className = 'gallery-item';
+            div.onclick = () => openModal(item);
+            
+            const branch = getBranch(index);
+            const folder = `thumbnails${Math.min(branch, 4)}`;
+            const thumbUrl = `${BASE_URL}/${folder}/${item.File}`;
+            
+            div.innerHTML = `
+                <img src="${thumbUrl}" alt="${item.Title || item.File}" loading="lazy" onerror="this.parentElement.style.display='none'">
+            `;
+            
+            return div;
+        }
+
+        // Open modal
+        function openModal(item) {
+            currentItem = item;
+            const branch = getBranch(galleryData.findIndex(i => i.File === item.File));
+            const bigUrl = `${BASE_URL}/Big${Math.min(branch, 4)}/${item.File}`;
+            
+            document.getElementById('modalImage').src = bigUrl;
+            
+            // Meta info
+            const metaHtml = `
+                <div class="meta-item">Model: <span>${item.Model || 'N/A'}</span></div>
+                <div class="meta-item">Sampler: <span>${item.Sampler || 'N/A'}</span></div>
+                <div class="meta-item">Filter: <span>${item.Filter || 'N/A'}</span></div>
+            `;
+            document.getElementById('modalMeta').innerHTML = metaHtml;
+            
+            document.getElementById('modalSeed').textContent = item.Seed || 'N/A';
+            document.getElementById('modalPrompt').textContent = item.Prompt || 'N/A';
+            document.getElementById('modalNegative').textContent = item['Removed_From_Image'] || 'N/A';
+            
+            document.getElementById('modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+            document.body.style.overflow = '';
+            document.getElementById('modalImage').src = '';
+        }
+
+        // Copy functions
+        function copyToClipboard(text, btn) {
+            navigator.clipboard.writeText(text).then(() => {
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+                
+                // Show toast
+                const toast = document.getElementById('toast');
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2000);
+            });
+        }
+
+        function copyPrompt() {
+            const btn = event.target;
+            copyToClipboard(currentItem.Prompt || 'N/A', btn);
+        }
+
+        function copyNegative() {
+            const btn = event.target;
+            copyToClipboard(currentItem['Removed_From_Image'] || 'N/A', btn);
+        }
+
+        function copySeed() {
+            const btn = event.target;
+            copyToClipboard(currentItem.Seed || 'N/A', btn);
+        }
+
+        // Close modal on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // Close modal on background click
+        document.getElementById('modal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('modal')) closeModal();
+        });
+
+        // Initialize gallery
+        function initGallery() {
+            try {
+                // Use embedded CSV data directly
+                galleryData = parseCSV(CSV_DATA);
+                
+                const gallery = document.getElementById('gallery');
+                
+                // Only show items that have prompts
+                const validItems = galleryData.filter(item => item.Prompt && item.Prompt !== 'NA');
+                
+                validItems.forEach((item, index) => {
+                    const galleryItem = createGalleryItem(item, galleryData.indexOf(item));
+                    gallery.appendChild(galleryItem);
+                });
+                
+                document.getElementById('loadingOverlay').classList.add('hidden');
+                
+            } catch (error) {
+                console.error('Error loading gallery:', error);
+                document.getElementById('loadingOverlay').innerHTML = `
+                    <div style="text-align:center;padding:40px 20px;color:#666;">
+                        <div style="color:#f55;font-size:18px;margin-bottom:15px;">ERROR LOADING GALLERY</div>
+                        <div style="font-size:13px;line-height:1.6;">Vérifiez que les données CSV sont correctement intégrées.</div>
+                    </div>
+                `;
+            }
+        }
+
+        // Start
+        initGallery();
+    </script>
+</body>
+</html>
