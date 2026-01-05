@@ -515,19 +515,19 @@ SERONDA-PG-3019,NA,"Abstract composite photo design with watercolor textures, so
             return num >= 2045;
         }
 
-        function createGalleryItem(item, dataMap) {
+        function createGalleryItem(currentItem, dataMap) {
             const div = document.createElement('div');
             div.className = 'gallery-item';
             
-            const imageUrl = getThumbUrl(item.File);
+            const imageUrl = getThumbUrl(currentItem.File);
             
             div.onclick = () => {
                 // Look up the item by File ID in the data map
-                const correctItem = dataMap[item.File];
-                console.log('Clicked:', item.File, 'Data:', correctItem);
+                const correctItem = dataMap[currentItem.File];
+                console.log('Clicked:', currentItem.File, 'Data:', correctItem);
                 
-                if (hasBigVersion(item.File)) {
-                    const bigUrl = getBigUrl(item.File);
+                if (hasBigVersion(currentItem.File)) {
+                    const bigUrl = getBigUrl(currentItem.File);
                     openModal(correctItem, bigUrl);
                 } else {
                     openModalWithoutImage(correctItem);
@@ -536,7 +536,7 @@ SERONDA-PG-3019,NA,"Abstract composite photo design with watercolor textures, so
             
             const img = document.createElement('img');
             img.src = imageUrl;
-            img.alt = item.File;
+            img.alt = currentItem.File;
             img.loading = 'lazy';
             img.onerror = () => {
                 console.error('Failed to load:', imageUrl);
@@ -654,9 +654,9 @@ SERONDA-PG-3019,NA,"Abstract composite photo design with watercolor textures, so
                 console.log('Gallery data:', galleryData);
                 console.log('Data map:', dataMap);
                 
-                galleryData.forEach(item => {
-                    if (item.Prompt && item.Prompt !== 'NA') {
-                        const galleryItem = createGalleryItem(item, dataMap);
+                galleryData.forEach(csvItem => {
+                    if (csvItem.Prompt && csvItem.Prompt !== 'NA') {
+                        const galleryItem = createGalleryItem(csvItem, dataMap);
                         gallery.appendChild(galleryItem);
                     }
                 });
