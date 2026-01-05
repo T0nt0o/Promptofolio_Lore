@@ -1,0 +1,10 @@
+{
+    "name": "Lore Playground Gallery",
+    "short_name": "Lore Gallery",
+    "description": "A minimalist image gallery displaying AI-generated artwork with metadata",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#050505",
+    "theme_color": "#000000",
+    "icons": []
+}
