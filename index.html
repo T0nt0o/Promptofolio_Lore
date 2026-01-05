@@ -14,7 +14,7 @@
         body {
             background-color: #050505;
             color: #e5e5e5;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', sans-serif;
             min-height: 100vh;
         }
 
@@ -36,427 +36,228 @@
         .logo {
             font-size: 18px;
             font-weight: 700;
-            background: linear-gradient(45deg, #d4af37, #ffb6c1, #d4af37, #ffb6c1, #d4af37);
+            background: linear-gradient(45deg, #d4af37, #ffb6c1, #d4af37);
             background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
             animation: metallic 3s linear infinite;
-            letter-spacing: 2px;
         }
 
         @keyframes metallic {
-            0% { background-position: 0% center; }
-            100% { background-position: 200% center; }
+            to { background-position: 200% center; }
         }
 
         .subtitle {
             font-size: 10px;
             color: #666;
-            letter-spacing: 1px;
             text-transform: uppercase;
-        }
-
-        .gallery-container {
-            padding-top: 50px;
-            padding-left: 10px;
-            padding-right: 10px;
-            padding-bottom: 40px;
         }
 
         .gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 6px;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 8px;
+            padding: 50px 10px 40px;
         }
 
-        .gallery-item {
-            position: relative;
+        .item {
             aspect-ratio: 1;
-            overflow: hidden;
-            cursor: pointer;
             background: #111;
+            cursor: pointer;
+            overflow: hidden;
         }
 
-        .gallery-item img {
+        .item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s ease, filter 0.3s ease;
-            filter: grayscale(30%);
+            transition: transform 0.2s;
         }
 
-        .gallery-item:hover img {
+        .item:hover img {
             transform: scale(1.05);
-            filter: grayscale(0%);
-        }
-
-        .gallery-item.error {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #0a0a0a;
-        }
-
-        .gallery-item.error img {
-            display: none;
-        }
-
-        .gallery-item .error-icon {
-            color: #333;
-            font-size: 24px;
-            font-weight: bold;
         }
 
         .modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             background: rgba(0, 0, 0, 0.95);
             z-index: 2000;
-            overflow-y: auto;
-            animation: fadeIn 0.3s ease;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
         }
 
         .modal.active {
             display: flex;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
         .modal-content {
-            display: flex;
-            flex-direction: column;
+            max-width: 900px;
             width: 100%;
-            max-width: 1400px;
-            margin: auto;
-            padding: 20px;
-            gap: 20px;
-        }
-
-        @media (min-width: 900px) {
-            .modal-content {
-                flex-direction: row;
-                align-items: flex-start;
-            }
-        }
-
-        .modal-image-container {
-            flex: 1;
             display: flex;
-            justify-content: center;
-            align-items: flex-start;
+            gap: 30px;
         }
 
-        .modal-image {
-            max-width: 100%;
-            max-height: 60vh;
+        .modal-content img {
+            max-width: 400px;
+            max-height: 80vh;
             object-fit: contain;
-            border: 1px solid #222;
         }
 
         .modal-info {
-            flex: 0 0 400px;
-            max-width: 100%;
+            flex: 1;
             background: #0a0a0a;
-            border: 1px solid #222;
             padding: 20px;
+            border: 1px solid #222;
         }
 
         .modal-close {
             position: fixed;
-            top: 15px;
-            right: 15px;
+            top: 20px;
+            right: 20px;
             background: none;
             border: none;
             color: #888;
-            font-size: 28px;
+            font-size: 30px;
             cursor: pointer;
-            z-index: 2001;
-            transition: color 0.3s ease;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 50%;
         }
 
         .modal-close:hover {
             color: #fff;
         }
 
-        .info-section {
-            margin-bottom: 20px;
+        .field {
+            margin-bottom: 15px;
         }
 
-        .info-label {
+        .label {
             font-size: 10px;
             color: #666;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            margin-bottom: 5px;
         }
 
-        .info-value {
+        .value {
             font-size: 13px;
             color: #ccc;
-            line-height: 1.5;
-            word-break: break-word;
-            max-height: 150px;
-            overflow-y: auto;
-            padding: 12px;
             background: #111;
+            padding: 10px;
             border: 1px solid #222;
+            word-break: break-word;
         }
 
         .copy-btn {
             background: #1a1a1a;
             border: 1px solid #333;
             color: #888;
-            padding: 6px 12px;
-            font-size: 11px;
+            padding: 5px 10px;
+            font-size: 10px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            margin-left: 10px;
         }
 
         .copy-btn:hover {
             background: #2d1b4e;
-            border-color: #4a1359;
             color: #fff;
         }
 
         .copy-btn.copied {
             background: #1b4e2d;
-            border-color: #2d7a4e;
             color: #8f8;
         }
 
-        .seed-value {
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
+        .seed {
+            font-family: monospace;
             color: #d4af37;
-            background: #111;
-            padding: 12px;
-            border: 1px solid #222;
         }
 
-        .modal-meta {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #222;
-            flex-wrap: wrap;
-        }
-
-        .meta-item {
-            font-size: 11px;
-            color: #666;
-        }
-
-        .meta-item span {
-            color: #999;
-        }
-
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #050505;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 3000;
-        }
-
-        .loading-overlay.hidden {
-            display: none;
-        }
-
-        .loading-text {
-            color: #444;
-            font-size: 14px;
-            letter-spacing: 2px;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: #1b4e2d;
-            color: #8f8;
-            padding: 12px 24px;
-            font-size: 13px;
-            border: 1px solid #2d7a4e;
-            z-index: 4000;
-            transition: transform 0.3s ease;
-        }
-
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-        }
-
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #111;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #333;
+        @media (max-width: 700px) {
+            .modal-content {
+                flex-direction: column;
+            }
+            .modal-content img {
+                max-width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-text">LOADING GALLERY...</div>
-    </div>
-
     <header>
         <div class="logo">LORE</div>
         <div class="subtitle">Playground gallery</div>
     </header>
 
-    <div class="gallery-container">
-        <div class="gallery" id="gallery"></div>
-    </div>
+    <div class="gallery" id="gallery"></div>
 
     <div class="modal" id="modal">
         <button class="modal-close" onclick="closeModal()">&times;</button>
         <div class="modal-content">
-            <div class="modal-image-container">
-                <img class="modal-image" id="modalImage" src="" alt="">
-            </div>
+            <img id="modalImg" src="" alt="">
             <div class="modal-info">
-                <div class="modal-meta" id="modalMeta"></div>
-                
-                <div class="info-section">
-                    <div class="info-label">
-                        Seed
-                        <button class="copy-btn" onclick="copySeed()">Copy</button>
-                    </div>
-                    <div class="seed-value" id="modalSeed"></div>
+                <div class="field">
+                    <div class="label">Seed <button class="copy-btn" onclick="copySeed()">Copy</button></div>
+                    <div class="value seed" id="modalSeed"></div>
                 </div>
-
-                <div class="info-section">
-                    <div class="info-label">
-                        Prompt
-                        <button class="copy-btn" onclick="copyPrompt()">Copy</button>
-                    </div>
-                    <div class="info-value" id="modalPrompt"></div>
+                <div class="field">
+                    <div class="label">Prompt <button class="copy-btn" onclick="copyPrompt()">Copy</button></div>
+                    <div class="value" id="modalPrompt"></div>
                 </div>
-
-                <div class="info-section">
-                    <div class="info-label">
-                        Negative
-                        <button class="copy-btn" onclick="copyNegative()">Copy</button>
-                    </div>
-                    <div class="info-value" id="modalNegative"></div>
+                <div class="field">
+                    <div class="label">Negative <button class="copy-btn" onclick="copyNegative()">Copy</button></div>
+                    <div class="value" id="modalNegative"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="toast" id="toast">Copied to clipboard</div>
-
     <script>
-        // Données des images (intégrées directement)
-        const IMAGE_DATA = [
-            { id: "SERONDA-PG-1", seed: "376960941", prompt: "A centered portrait photograph of a young woman with long, wavy dark brown hair standing in a pastel pink sleek bedroom millenial-style, while reading a book titled 'In Defense of Lost Causes' by Slavoj Žižek.", negative: "ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy" },
-            { id: "SERONDA-PG-10", seed: "26322115", prompt: "A weary individual slouched over a desk, head resting on arms, surrounded by scattered papers and a dim desk lamp casting long shadows.", negative: "ugly, anime, deformed, noisy, blurry, distorted" },
-            { id: "SERONDA-PG-100", seed: "24213521", prompt: "Vibrant Dark academia aesthetic oil painting embodying moody and mysterious atmosphere, epic fantasy elements.", negative: "ugly, deformed, noisy, blurry, distorted, out of focus" },
-            { id: "SERONDA-PG-1011", seed: "486752610", prompt: "surreal minimal collage, concept art, grim, dreamy, dark art, macabre, cool toned, grunge.", negative: "ugly, deformed, noisy, blurry, distorted" },
-            { id: "SERONDA-PG-1012", seed: "717360247", prompt: "Collage blending retrofuturism, surrealism, realism infused with fantasy elements.", negative: "ugly, deformed, noisy, blurry, distorted" },
-            { id: "SERONDA-PG-2045", seed: "950248608", prompt: "dreamy mood, Beautiful seductive smiling beautiful stunning fairy, intricated details.", negative: "ugly, anime, deformed, noisy, blurry" },
-            { id: "SERONDA-PG-3019", seed: "266384131", prompt: "Abstract composite photo design with watercolor textures, soft pastel colors, organic flowing shapes.", negative: "ugly, deformed, noisy, blurry, distorted" }
+        // Liste des images avec URLs directes
+        var images = [
+            { csvId: "SERONDA-PG-0001", url: "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/refs/heads/thumbnails1/Seronda-PG-1.jpg" },
+            { csvId: "SERONDA-PG-0002", url: "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/refs/heads/thumbnails1/Seronda-PG-2.jpg" },
+            { csvId: "SERONDA-PG-0003", url: "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/refs/heads/thumbnails1/Seronda-PG-3.jpg" },
+            { csvId: "SERONDA-PG-0004", url: "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/refs/heads/thumbnails1/Seronda-PG-4.jpg" },
+            { csvId: "SERONDA-PG-0005", url: "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/refs/heads/thumbnails1/Seronda-PG-5.jpg" }
         ];
 
-        const REPO_OWNER = 'T0nt0o';
-        const REPO_NAME = 'Promptofolio_Lore';
+        // Données CSV
+        var csvData = {
+            "SERONDA-PG-0001": { seed: "123456789", prompt: "A beautiful sunset over mountains", negative: "ugly, blurry, distorted" },
+            "SERONDA-PG-0002": { seed: "987654321", prompt: "A portrait of a woman in cyberpunk style", negative: "low quality, deformed" },
+            "SERONDA-PG-0003": { seed: "456789123", prompt: "Abstract geometric shapes in neon colors", negative: "messy, unclear" },
+            "SERONDA-PG-0004": { seed: "789123456", prompt: "A forest with magical glowing lights", negative: "dark, scary" },
+            "SERONDA-PG-0005": { seed: "321654987", prompt: "A modern city skyline at night", negative: "blurry, low resolution" }
+        };
 
-        let currentImage = null;
+        var currentData = null;
 
-        // Obtenir l'URL de l'image thumbnail
-        function getImageUrl(imageId) {
-            const num = parseInt(imageId.replace('SERONDA-PG-', ''), 10);
-            
-            if (num < 1011) {
-                // thumbnails1: "Seronda-PG-X.jpg"
-                return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/thumbnails1/Seronda-PG-${num}.jpg`;
-            } else if (num < 2045) {
-                // thumbnails2: "SERONDA-PG-XXXX.jpg"
-                return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/thumbnails2/${imageId}.jpg`;
-            } else if (num < 3019) {
-                // thumbnails3: "SERONDA-PG-XXXX.jpg"
-                return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/thumbnails3/${imageId}.jpg`;
-            } else {
-                // thumbnails4: "SERONDA-PG-XXXX.jpg"
-                return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/thumbnails4/${imageId}.jpg`;
-            }
-        }
+        // Créer la galerie
+        var gallery = document.getElementById('gallery');
+        images.forEach(function(imgInfo) {
+            var item = document.createElement('div');
+            item.className = 'item';
+            item.onclick = (function(data, url) {
+                return function() {
+                    currentData = csvData[data.csvId];
+                    document.getElementById('modalImg').src = url;
+                    document.getElementById('modalSeed').textContent = currentData.seed;
+                    document.getElementById('modalPrompt').textContent = currentData.prompt;
+                    document.getElementById('modalNegative').textContent = currentData.negative;
+                    document.getElementById('modal').classList.add('active');
+                };
+            })(imgInfo, imgInfo.url);
 
-        // Créer un élément de galerie
-        function createGalleryItem(imageId, imageInfo) {
-            const div = document.createElement('div');
-            div.className = 'gallery-item';
-
-            const imgUrl = getImageUrl(imageId);
-
-            div.onclick = function() {
-                currentImage = imageInfo;
-                document.getElementById('modalImage').src = imgUrl;
-                document.getElementById('modalImage').style.display = 'block';
-                showImageInfo(imageInfo);
-                document.getElementById('modal').classList.add('active');
-                document.body.style.overflow = 'hidden';
-            };
-
-            const img = document.createElement('img');
-            img.src = imgUrl;
-            img.alt = imageId;
-            img.loading = 'lazy';
-            img.onerror = function() {
-                div.classList.add('error');
-                div.innerHTML = '<div class="error-icon">?</div>';
-            };
-
-            div.appendChild(img);
-            return div;
-        }
-
-        function showImageInfo(info) {
-            const metaHtml = `
-                <div class="meta-item">ID: <span>${info.id}</span></div>
-            `;
-            document.getElementById('modalMeta').innerHTML = metaHtml;
-            document.getElementById('modalSeed').textContent = info.seed;
-            document.getElementById('modalPrompt').textContent = info.prompt;
-            document.getElementById('modalNegative').textContent = info.negative;
-        }
+            var img = document.createElement('img');
+            img.src = imgInfo.url;
+            img.onerror = function() { item.style.background = '#222'; };
+            item.appendChild(img);
+            gallery.appendChild(item);
+        });
 
         function closeModal() {
             document.getElementById('modal').classList.remove('active');
-            document.body.style.overflow = '';
-            document.getElementById('modalImage').src = '';
         }
 
         function copyToClipboard(text, btn) {
@@ -466,46 +267,20 @@
                 setTimeout(function() {
                     btn.textContent = 'Copy';
                     btn.classList.remove('copied');
-                }, 2000);
-                const toast = document.getElementById('toast');
-                toast.classList.add('show');
-                setTimeout(function() { toast.classList.remove('show'); }, 2000);
+                }, 1500);
             });
         }
 
-        function copyPrompt() {
-            copyToClipboard(currentImage.prompt, event.target);
-        }
+        function copySeed() { copyToClipboard(currentData.seed, event.target); }
+        function copyPrompt() { copyToClipboard(currentData.prompt, event.target); }
+        function copyNegative() { copyToClipboard(currentData.negative, event.target); }
 
-        function copyNegative() {
-            copyToClipboard(currentImage.negative, event.target);
-        }
-
-        function copySeed() {
-            copyToClipboard(currentImage.seed, event.target);
-        }
-
-        document.addEventListener('keydown', function(e) {
+        document.onkeydown = function(e) {
             if (e.key === 'Escape') closeModal();
-        });
-
-        document.getElementById('modal').addEventListener('click', function(e) {
-            if (e.target === document.getElementById('modal')) closeModal();
-        });
-
-        // Initialiser la galerie
-        function initGallery() {
-            const gallery = document.getElementById('gallery');
-            
-            IMAGE_DATA.forEach(function(imageInfo) {
-                const item = createGalleryItem(imageInfo.id, imageInfo);
-                gallery.appendChild(item);
-            });
-            
-            document.getElementById('loadingOverlay').classList.add('hidden');
-        }
-
-        initGallery();
+        };
+        document.getElementById('modal').onclick = function(e) {
+            if (e.target === this) closeModal();
+        };
     </script>
 </body>
 </html>
