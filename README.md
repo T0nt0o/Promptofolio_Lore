@@ -1,4 +1,4 @@
-# Lore Playground Gallery v2
+# Lore Playground Gallery v2 (Fixed)
 
 A minimalist image gallery displaying AI-generated artwork from the Promptofolio_Lore repository.
 
@@ -11,12 +11,24 @@ A minimalist image gallery displaying AI-generated artwork from the Promptofolio
 - Pink-gold metallic "LORE" logo with minimalist design
 - Fully responsive design
 
-## What's New in v2
+## What's Fixed in v2 (Latest Update)
 
-- **Fixed image loading issue**: Now uses GitHub API to fetch actual file URLs
-- **More reliable image fetching**: Queries the GitHub API directly instead of constructing URLs
-- **Better error handling**: Fallback URL construction if API fails
-- **Improved caching**: Caches file URLs to minimize API calls
+### Issues Resolved
+
+1. **All images now load correctly**: Fixed the issue where only 3 images displayed while 4 were grayed out. The gallery now fetches ALL files from each GitHub branch and builds a complete asset map.
+
+2. **Correct metadata matching**: Fixed the issue where clicking an image showed incorrect information. The gallery now properly maps each CSV entry to its corresponding image using normalized filenames.
+
+3. **Big images now display**: Fixed the high-resolution image URLs. Images from SERONDA-PG-2045 onwards now correctly load their Big3/Big4 versions in the modal.
+
+4. **Title field added**: Added the Title field display in the popup modal. If an image has a title (not "NA"), it now appears at the top of the info panel.
+
+### Technical Improvements
+
+- **Complete asset mapping**: Instead of caching one file per branch, the gallery now queries ALL files from thumbnails1-4 and Big3-4 branches
+- **Normalized filename lookup**: Uses consistent filename normalization (uppercase, remove extension) for reliable matching
+- **Dual lookup strategy**: First tries the GitHub API cache, then falls back to constructed URLs based on number ranges
+- **Better error logging**: Added console logs to help diagnose any remaining issues
 
 ## Deployment
 

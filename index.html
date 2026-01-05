@@ -271,6 +271,20 @@
             color: #999;
         }
 
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #222;
+        }
+
+        .modal-title:empty,
+        .modal-title.na {
+            display: none;
+        }
+
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -366,6 +380,8 @@
                 <img class="modal-image" id="modalImage" src="" alt="">
             </div>
             <div class="modal-info">
+                <div class="modal-title" id="modalTitle"></div>
+                
                 <div class="modal-meta" id="modalMeta"></div>
                 
                 <div class="info-section">
@@ -398,6 +414,9 @@
     <div class="toast" id="toast">Copied to clipboard</div>
 
     <script>
+        const REPO_OWNER = 'T0nt0o';
+        const REPO_NAME = 'Promptofolio_Lore';
+        
         // CSV data with REAL images from GitHub
         const CSV_DATA = `File,Title,Prompt,Removed_From_Image,Model,Filter,Sampler,Seed,Source,Created
 SERONDA-PG-1,NA,"A centered portrait photograph of a young woman with long, wavy dark brown hair standing in a pastel pink sleek bedroom millenial-style, while reading a book titled 'In Defense of Lost Causes' by Slavoj Žižek.","ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy",Playground v2.5,Photorealism,DPM++ 2M Karras,376960941,Canvas,202409170524
@@ -408,176 +427,156 @@ SERONDA-PG-1012,NA,"Collage blending retrofuturism, surrealism, realism infused 
 SERONDA-PG-2045,NA,"dreamy mood, Beautiful seductive smiling beautiful stunning fairy, intricated details.","ugly, anime, deformed, noisy, blurry",Playground v2.5,Photorealism,DPM++ 2M Karras,950248608,Canvas,202409180412
 SERONDA-PG-3019,NA,"Abstract composite photo design with watercolor textures, soft pastel colors, organic flowing shapes.","ugly, deformed, noisy, blurry, distorted",Playground v2.5,Photorealism,DPM++ 2M Karras,266384131,Canvas,202409230523`;
         
-        const REPO_OWNER = 'T0nt0o';
-        const REPO_NAME = 'Promptofolio_Lore';
-        
         // Branch configurations
         const BRANCHES = {
-            thumbnails1: { hasBig: false, nameFormat: 'Seronda-PG-X.jpg' },
-            thumbnails2: { hasBig: false, nameFormat: 'SERONDA-PG-X.jpg' },
-            thumbnails3: { hasBig: true, bigBranch: 'Big3', nameFormat: 'SERONDA-PG-X.jpg' },
-            thumbnails4: { hasBig: true, bigBranch: 'Big4', nameFormat: 'SERONDA-PG-X.jpg' }
+            thumb: ['thumbnails1', 'thumbnails2', 'thumbnails3', 'thumbnails4'],
+            big: ['Big3', 'Big4']
         };
         
-        // Cache for file URLs
-        let urlCache = { thumb: {}, big: {} };
+        // Asset map to store filename -> download_url mappings
+        let assetMap = {
+            thumb: {},
+            big: {}
+        };
+        
         let galleryData = [];
         let currentItem = null;
-        let loadingPromises = [];
 
-        // Generate possible filenames for a given number
-        function getPossibleFilenames(num) {
-            const numStr = num.toString();
-            return [
-                `Seronda-PG-${num}.jpg`,
-                `SERONDA-PG-${num}.jpg`,
-                `Seronda-PG-${numStr.padStart(4, '0')}.jpg`,
-                `SERONDA-PG-${numStr.padStart(4, '0')}.jpg`
-            ];
+        // Normalize filename for lookup (remove extension, convert to uppercase)
+        function normalizeFilename(filename) {
+            // Remove .jpg extension and convert to uppercase
+            return filename.replace(/\.jpg$/i, '').toUpperCase();
         }
 
-        // Fetch file content from GitHub API and extract download_url
-        async function fetchFileUrl(branch, path) {
+        // Extract number from filename for range-based lookup
+        function extractNumber(filename) {
+            const match = filename.match(/SERONDA-PG-(\d+)/i);
+            if (match) {
+                return parseInt(match[1], 10);
+            }
+            return null;
+        }
+
+        // Fetch all files from a GitHub API endpoint
+        async function fetchBranchFiles(branch, path = '') {
             const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}?ref=${branch}`;
             try {
                 const response = await fetch(url);
                 if (!response.ok) {
                     console.warn(`Failed to fetch ${path} from ${branch}: ${response.status}`);
-                    return null;
+                    return [];
                 }
                 const data = await response.json();
-                return data.download_url;
+                // API returns array of items
+                return Array.isArray(data) ? data : [data];
             } catch (error) {
                 console.warn(`Error fetching ${path} from ${branch}:`, error);
-                return null;
+                return [];
             }
         }
 
-        // Build URL cache by querying GitHub API for all files
-        async function buildUrlCache() {
-            const branches = Object.keys(BRANCHES);
-            const promises = [];
-
-            for (const branch of branches) {
-                // Fetch thumbnail files
-                const thumbPromise = fetchFileUrl(branch, '')
-                    .then(downloadUrl => {
-                        if (downloadUrl) {
-                            // Extract filename from the download URL and infer the pattern
-                            const urlParts = downloadUrl.split('/');
-                            const filename = urlParts[urlParts.length - 1];
-                            const match = filename.match(/SERONDA-PG-(\d+)/i);
-                            if (match) {
-                                const num = parseInt(match[1], 10);
-                                // Determine the actual branch by the number range
-                                let actualBranch = branch;
-                                if (num < 1011) actualBranch = 'thumbnails1';
-                                else if (num < 2045) actualBranch = 'thumbnails2';
-                                else if (num < 3019) actualBranch = 'thumbnails3';
-                                else actualBranch = 'thumbnails4';
-                                
-                                // Store by both original and derived keys
-                                urlCache.thumb[filename.toUpperCase()] = downloadUrl;
-                                urlCache.thumb[`SERONDA-PG-${num}`] = downloadUrl;
-                                
-                                console.log(`Cached: SERONDA-PG-${num} -> ${downloadUrl}`);
+        // Build the asset map by fetching ALL files from all branches
+        async function buildAssetMap() {
+            console.log('Building asset map from GitHub API...');
+            
+            const allPromises = [];
+            
+            // Fetch all thumbnail branches
+            for (const branch of BRANCHES.thumb) {
+                allPromises.push(
+                    fetchBranchFiles(branch).then(files => {
+                        console.log(`Found ${files.length} files in ${branch}`);
+                        files.forEach(file => {
+                            if (file.type === 'file' && file.name.match(/\.jpg$/i)) {
+                                const normalized = normalizeFilename(file.name);
+                                assetMap.thumb[normalized] = file.download_url;
+                                console.log(`  Cached thumb: ${normalized} -> ${file.download_url}`);
                             }
-                        }
-                    })
-                    .catch(err => console.warn(`Error caching ${branch}:`, err));
-                
-                promises.push(thumbPromise);
-
-                // Fetch big images if applicable
-                if (BRANCHES[branch].hasBig && BRANCHES[branch].bigBranch) {
-                    const bigPromise = fetchFileUrl(BRANCHES[branch].bigBranch, '')
-                        .then(downloadUrl => {
-                            if (downloadUrl) {
-                                const urlParts = downloadUrl.split('/');
-                                const filename = urlParts[urlParts.length - 1];
-                                const match = filename.match(/SERONDA-PG-(\d+)/i);
-                                if (match) {
-                                    const num = parseInt(match[1], 10);
-                                    urlCache.big[filename.toUpperCase()] = downloadUrl;
-                                    urlCache.big[`SERONDA-PG-${num}`] = downloadUrl;
-                                    console.log(`Cached BIG: SERONDA-PG-${num} -> ${downloadUrl}`);
-                                }
-                            }
-                        })
-                        .catch(err => console.warn(`Error caching big from ${BRANCHES[branch].bigBranch}:`, err));
-                    
-                    promises.push(bigPromise);
-                }
+                        });
+                    }).catch(err => console.warn(`Error fetching ${branch}:`, err))
+                );
             }
-
-            await Promise.all(promises);
-            console.log('URL Cache built:', urlCache);
+            
+            // Fetch all big image branches
+            for (const branch of BRANCHES.big) {
+                allPromises.push(
+                    fetchBranchFiles(branch).then(files => {
+                        console.log(`Found ${files.length} files in ${branch}`);
+                        files.forEach(file => {
+                            if (file.type === 'file' && file.name.match(/\.jpg$/i)) {
+                                const normalized = normalizeFilename(file.name);
+                                assetMap.big[normalized] = file.download_url;
+                                console.log(`  Cached big: ${normalized} -> ${file.download_url}`);
+                            }
+                        });
+                    }).catch(err => console.warn(`Error fetching ${branch}:`, err))
+                );
+            }
+            
+            await Promise.all(allPromises);
+            console.log('Asset map built:', assetMap);
         }
 
-        // Get thumbnail URL from cache or construct it
+        // Get thumbnail URL from asset map or fallback to constructed URL
         function getThumbUrl(filename) {
-            const upperFilename = filename.toUpperCase();
-            if (urlCache.thumb[upperFilename]) {
-                return urlCache.thumb[upperFilename];
+            const normalized = normalizeFilename(filename);
+            
+            // Try to find in cache first
+            if (assetMap.thumb[normalized]) {
+                return assetMap.thumb[normalized];
             }
             
-            // Fallback: try to construct URL based on number ranges
-            const match = filename.match(/SERONDA-PG-(\d+)/i);
-            if (match) {
-                const num = parseInt(match[1], 10);
-                let branch, actualFilename;
-
-                if (num < 1011) {
-                    branch = 'thumbnails1';
-                    actualFilename = `Seronda-PG-${num}.jpg`;
-                } else if (num < 2045) {
-                    branch = 'thumbnails2';
-                    actualFilename = `${filename.toUpperCase()}.jpg`;
-                } else if (num < 3019) {
-                    branch = 'thumbnails3';
-                    actualFilename = `${filename.toUpperCase()}.jpg`;
-                } else {
-                    branch = 'thumbnails4';
-                    actualFilename = `${filename.toUpperCase()}.jpg`;
-                }
-
-                return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${branch}/${actualFilename}`;
+            // Fallback: construct URL based on number ranges
+            const num = extractNumber(filename);
+            if (num === null) return null;
+            
+            let branch, actualFilename;
+            
+            if (num < 1011) {
+                branch = 'thumbnails1';
+                actualFilename = `Seronda-PG-${num}.jpg`;  // Note: no zero-padding, mixed case
+            } else if (num < 2045) {
+                branch = 'thumbnails2';
+                actualFilename = `${filename.toUpperCase()}.jpg`;
+            } else if (num < 3019) {
+                branch = 'thumbnails3';
+                actualFilename = `${filename.toUpperCase()}.jpg`;
+            } else {
+                branch = 'thumbnails4';
+                actualFilename = `${filename.toUpperCase()}.jpg`;
             }
             
-            return null;
+            return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${branch}/${actualFilename}`;
         }
 
-        // Get big image URL from cache or construct it
+        // Get big image URL from asset map or fallback to constructed URL
         function getBigUrl(filename) {
-            const upperFilename = filename.toUpperCase();
-            if (urlCache.big[upperFilename]) {
-                return urlCache.big[upperFilename];
+            const normalized = normalizeFilename(filename);
+            
+            // Try to find in cache first
+            if (assetMap.big[normalized]) {
+                return assetMap.big[normalized];
             }
             
-            // Fallback: check if this number range has big images
-            const match = filename.match(/SERONDA-PG-(\d+)/i);
-            if (match) {
-                const num = parseInt(match[1], 10);
-                
-                if (num >= 3019) {
-                    const actualFilename = `${filename.toUpperCase()}.jpg`;
-                    return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/Big4/${actualFilename}`;
-                } else if (num >= 2045) {
-                    const actualFilename = `${filename.toUpperCase()}.jpg`;
-                    return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/Big3/${actualFilename}`;
-                }
+            // Fallback: construct URL based on number ranges
+            const num = extractNumber(filename);
+            if (num === null) return null;
+            
+            if (num >= 3019) {
+                const actualFilename = `${filename.toUpperCase()}.jpg`;
+                return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/Big4/${actualFilename}`;
+            } else if (num >= 2045) {
+                const actualFilename = `${filename.toUpperCase()}.jpg`;
+                return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/Big3/${actualFilename}`;
             }
             
-            return null;
+            return null;  // No big version for numbers < 2045
         }
 
         // Check if file has a big version
         function hasBigVersion(filename) {
-            const match = filename.match(/SERONDA-PG-(\d+)/i);
-            if (!match) return false;
-            
-            const num = parseInt(match[1], 10);
-            return num >= 2045;
+            const num = extractNumber(filename);
+            return num !== null && num >= 2045;
         }
 
         function parseCSV(text) {
@@ -622,6 +621,7 @@ SERONDA-PG-3019,NA,"Abstract composite photo design with watercolor textures, so
             div.className = 'gallery-item';
             
             const imageUrl = getThumbUrl(item.File);
+            console.log(`Creating gallery item for ${item.File}, thumb URL: ${imageUrl}`);
             
             div.onclick = () => {
                 const bigUrl = getBigUrl(item.File);
@@ -637,6 +637,7 @@ SERONDA-PG-3019,NA,"Abstract composite photo design with watercolor textures, so
             img.alt = item.File;
             img.loading = 'lazy';
             img.onerror = () => {
+                console.error(`Failed to load image: ${imageUrl}`);
                 div.classList.add('error');
                 div.innerHTML = `<div class="error-icon">?</div>`;
             };
@@ -653,6 +654,7 @@ SERONDA-PG-3019,NA,"Abstract composite photo design with watercolor textures, so
             img.src = bigUrl;
             img.style.display = 'block';
             img.onerror = () => {
+                console.error(`Failed to load big image: ${bigUrl}`);
                 img.style.display = 'none';
             };
             
@@ -674,6 +676,16 @@ SERONDA-PG-3019,NA,"Abstract composite photo design with watercolor textures, so
         }
 
         function showModalInfo(item) {
+            // Display title if it exists and is not "NA"
+            const titleEl = document.getElementById('modalTitle');
+            if (item.Title && item.Title !== 'NA') {
+                titleEl.textContent = item.Title;
+                titleEl.classList.remove('na');
+            } else {
+                titleEl.textContent = '';
+                titleEl.classList.add('na');
+            }
+            
             const metaHtml = `
                 <div class="meta-item">Model: <span>${item.Model || 'N/A'}</span></div>
                 <div class="meta-item">Sampler: <span>${item.Sampler || 'N/A'}</span></div>
@@ -732,12 +744,14 @@ SERONDA-PG-3019,NA,"Abstract composite photo design with watercolor textures, so
 
         async function initGallery() {
             try {
-                // Build URL cache from GitHub API
-                await buildUrlCache();
+                // Build asset map from GitHub API
+                await buildAssetMap();
                 
                 // Parse CSV data
                 galleryData = parseCSV(CSV_DATA);
                 const gallery = document.getElementById('gallery');
+                
+                console.log(`Rendering ${galleryData.length} gallery items`);
                 
                 galleryData.forEach(item => {
                     if (item.Prompt && item.Prompt !== 'NA') {
@@ -753,6 +767,7 @@ SERONDA-PG-3019,NA,"Abstract composite photo design with watercolor textures, so
                 document.getElementById('loadingOverlay').innerHTML = `
                     <div style="text-align:center;padding:40px 20px;color:#666;">
                         <div style="color:#f55;font-size:18px;margin-bottom:15px;">ERROR</div>
+                        <div>${error.message}</div>
                     </div>
                 `;
             }
