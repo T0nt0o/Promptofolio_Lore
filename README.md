@@ -1,4 +1,4 @@
-# Lore Playground Gallery v2 (Fixed)
+# Lore Playground Gallery v2 (Final Fix)
 
 A minimalist image gallery displaying AI-generated artwork from the Promptofolio_Lore repository.
 
@@ -11,24 +11,28 @@ A minimalist image gallery displaying AI-generated artwork from the Promptofolio
 - Pink-gold metallic "LORE" logo with minimalist design
 - Fully responsive design
 
-## What's Fixed in v2 (Latest Update)
+## What's Fixed in v2 (Final Fix)
 
-### Issues Resolved
+### Critical Bug Fixes (January 2024)
 
-1. **All images now load correctly**: Fixed the issue where only 3 images displayed while 4 were grayed out. The gallery now fetches ALL files from each GitHub branch and builds a complete asset map.
+1. **Fixed incorrect metadata display**: The gallery now properly associates each image with its correct metadata from the CSV. When you click on SERONDA-PG-1, you now see the correct prompt "A centered portrait photograph..." instead of wrong data.
 
-2. **Correct metadata matching**: Fixed the issue where clicking an image showed incorrect information. The gallery now properly maps each CSV entry to its corresponding image using normalized filenames.
+2. **Simplified and reliable URL construction**: Replaced the buggy GitHub API caching with direct URL construction based on known filename patterns:
+   - SERONDA-PG-1 to 1010 → thumbnails1 branch, format: "Seronda-PG-X.jpg"
+   - SERONDA-PG-1011 to 2044 → thumbnails2 branch, format: "SERONDA-PG-XXXX.jpg"
+   - SERONDA-PG-2045 to 3018 → thumbnails3 branch, format: "SERONDA-PG-XXXX.jpg"
+   - SERONDA-PG-3019+ → thumbnails4 branch, format: "SERONDA-PG-XXXX.jpg"
 
-3. **Big images now display**: Fixed the high-resolution image URLs. Images from SERONDA-PG-2045 onwards now correctly load their Big3/Big4 versions in the modal.
+3. **Proper data mapping**: Created a `dataMap` that maps each File ID to its correct metadata, ensuring the click handler always shows the right information.
 
-4. **Title field added**: Added the Title field display in the popup modal. If an image has a title (not "NA"), it now appears at the top of the info panel.
+4. **Big images work correctly**: Images 2045 and 3019 now correctly show their Big3/Big4 versions in the modal.
 
-### Technical Improvements
+### Added Debug Logging
 
-- **Complete asset mapping**: Instead of caching one file per branch, the gallery now queries ALL files from thumbnails1-4 and Big3-4 branches
-- **Normalized filename lookup**: Uses consistent filename normalization (uppercase, remove extension) for reliable matching
-- **Dual lookup strategy**: First tries the GitHub API cache, then falls back to constructed URLs based on number ranges
-- **Better error logging**: Added console logs to help diagnose any remaining issues
+Added console logs to help diagnose any remaining issues:
+- Logs the gallery data structure
+- Logs the data map for verification
+- Logs which item was clicked and its data
 
 ## Deployment
 
@@ -51,29 +55,19 @@ A minimalist image gallery displaying AI-generated artwork from the Promptofolio
 
 Simply upload the entire `Lore-Gallery-v2` folder to your web server's public directory.
 
-## Local Testing
-
-To test locally, you need a local web server due to CORS restrictions:
-
-### Using Python
-```bash
-cd Lore-Gallery-v2
-python -m http.server 8000
-```
-Then open http://localhost:8000 in your browser
-
-### Using Node.js
-```bash
-cd Lore-Gallery-v2
-npx serve
-```
-
 ## Image Source
 
 Images are loaded from the GitHub repository:
 - Repository: T0nt0o/Promptofolio_Lore
 - Thumbnails from: thumbnails1, thumbnails2, thumbnails3, thumbnails4 branches
 - High-resolution images from: Big3, Big4 branches
+
+## Testing
+
+Open the browser's developer console (F12) to see debug logs showing:
+- The gallery data structure
+- The data map for verification
+- Which item was clicked and its correct metadata
 
 ## Browser Support
 

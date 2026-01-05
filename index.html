@@ -427,158 +427,10 @@ SERONDA-PG-1012,NA,"Collage blending retrofuturism, surrealism, realism infused 
 SERONDA-PG-2045,NA,"dreamy mood, Beautiful seductive smiling beautiful stunning fairy, intricated details.","ugly, anime, deformed, noisy, blurry",Playground v2.5,Photorealism,DPM++ 2M Karras,950248608,Canvas,202409180412
 SERONDA-PG-3019,NA,"Abstract composite photo design with watercolor textures, soft pastel colors, organic flowing shapes.","ugly, deformed, noisy, blurry, distorted",Playground v2.5,Photorealism,DPM++ 2M Karras,266384131,Canvas,202409230523`;
         
-        // Branch configurations
-        const BRANCHES = {
-            thumb: ['thumbnails1', 'thumbnails2', 'thumbnails3', 'thumbnails4'],
-            big: ['Big3', 'Big4']
-        };
-        
-        // Asset map to store filename -> download_url mappings
-        let assetMap = {
-            thumb: {},
-            big: {}
-        };
-        
         let galleryData = [];
         let currentItem = null;
 
-        // Normalize filename for lookup (remove extension, convert to uppercase)
-        function normalizeFilename(filename) {
-            // Remove .jpg extension and convert to uppercase
-            return filename.replace(/\.jpg$/i, '').toUpperCase();
-        }
-
-        // Extract number from filename for range-based lookup
-        function extractNumber(filename) {
-            const match = filename.match(/SERONDA-PG-(\d+)/i);
-            if (match) {
-                return parseInt(match[1], 10);
-            }
-            return null;
-        }
-
-        // Fetch all files from a GitHub API endpoint
-        async function fetchBranchFiles(branch, path = '') {
-            const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}?ref=${branch}`;
-            try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    console.warn(`Failed to fetch ${path} from ${branch}: ${response.status}`);
-                    return [];
-                }
-                const data = await response.json();
-                // API returns array of items
-                return Array.isArray(data) ? data : [data];
-            } catch (error) {
-                console.warn(`Error fetching ${path} from ${branch}:`, error);
-                return [];
-            }
-        }
-
-        // Build the asset map by fetching ALL files from all branches
-        async function buildAssetMap() {
-            console.log('Building asset map from GitHub API...');
-            
-            const allPromises = [];
-            
-            // Fetch all thumbnail branches
-            for (const branch of BRANCHES.thumb) {
-                allPromises.push(
-                    fetchBranchFiles(branch).then(files => {
-                        console.log(`Found ${files.length} files in ${branch}`);
-                        files.forEach(file => {
-                            if (file.type === 'file' && file.name.match(/\.jpg$/i)) {
-                                const normalized = normalizeFilename(file.name);
-                                assetMap.thumb[normalized] = file.download_url;
-                                console.log(`  Cached thumb: ${normalized} -> ${file.download_url}`);
-                            }
-                        });
-                    }).catch(err => console.warn(`Error fetching ${branch}:`, err))
-                );
-            }
-            
-            // Fetch all big image branches
-            for (const branch of BRANCHES.big) {
-                allPromises.push(
-                    fetchBranchFiles(branch).then(files => {
-                        console.log(`Found ${files.length} files in ${branch}`);
-                        files.forEach(file => {
-                            if (file.type === 'file' && file.name.match(/\.jpg$/i)) {
-                                const normalized = normalizeFilename(file.name);
-                                assetMap.big[normalized] = file.download_url;
-                                console.log(`  Cached big: ${normalized} -> ${file.download_url}`);
-                            }
-                        });
-                    }).catch(err => console.warn(`Error fetching ${branch}:`, err))
-                );
-            }
-            
-            await Promise.all(allPromises);
-            console.log('Asset map built:', assetMap);
-        }
-
-        // Get thumbnail URL from asset map or fallback to constructed URL
-        function getThumbUrl(filename) {
-            const normalized = normalizeFilename(filename);
-            
-            // Try to find in cache first
-            if (assetMap.thumb[normalized]) {
-                return assetMap.thumb[normalized];
-            }
-            
-            // Fallback: construct URL based on number ranges
-            const num = extractNumber(filename);
-            if (num === null) return null;
-            
-            let branch, actualFilename;
-            
-            if (num < 1011) {
-                branch = 'thumbnails1';
-                actualFilename = `Seronda-PG-${num}.jpg`;  // Note: no zero-padding, mixed case
-            } else if (num < 2045) {
-                branch = 'thumbnails2';
-                actualFilename = `${filename.toUpperCase()}.jpg`;
-            } else if (num < 3019) {
-                branch = 'thumbnails3';
-                actualFilename = `${filename.toUpperCase()}.jpg`;
-            } else {
-                branch = 'thumbnails4';
-                actualFilename = `${filename.toUpperCase()}.jpg`;
-            }
-            
-            return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${branch}/${actualFilename}`;
-        }
-
-        // Get big image URL from asset map or fallback to constructed URL
-        function getBigUrl(filename) {
-            const normalized = normalizeFilename(filename);
-            
-            // Try to find in cache first
-            if (assetMap.big[normalized]) {
-                return assetMap.big[normalized];
-            }
-            
-            // Fallback: construct URL based on number ranges
-            const num = extractNumber(filename);
-            if (num === null) return null;
-            
-            if (num >= 3019) {
-                const actualFilename = `${filename.toUpperCase()}.jpg`;
-                return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/Big4/${actualFilename}`;
-            } else if (num >= 2045) {
-                const actualFilename = `${filename.toUpperCase()}.jpg`;
-                return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/Big3/${actualFilename}`;
-            }
-            
-            return null;  // No big version for numbers < 2045
-        }
-
-        // Check if file has a big version
-        function hasBigVersion(filename) {
-            const num = extractNumber(filename);
-            return num !== null && num >= 2045;
-        }
-
+        // Parse CSV data into array of objects
         function parseCSV(text) {
             const lines = text.trim().split('\n');
             const headers = lines[0].split(',').map(h => h.trim());
@@ -616,28 +468,78 @@ SERONDA-PG-3019,NA,"Abstract composite photo design with watercolor textures, so
             return data;
         }
 
-        function createGalleryItem(item) {
+        // Create a map for quick lookup by filename
+        function createDataMap(data) {
+            const dataMap = {};
+            data.forEach(item => {
+                dataMap[item.File] = item;
+            });
+            return dataMap;
+        }
+
+        // Get thumbnail URL based on file number
+        function getThumbUrl(fileId) {
+            const num = parseInt(fileId.replace('SERONDA-PG-', ''), 10);
+            
+            if (num < 1011) {
+                // thumbnails1: "Seronda-PG-X.jpg" (no zero-padding, mixed case)
+                return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/thumbnails1/Seronda-PG-${num}.jpg`;
+            } else if (num < 2045) {
+                // thumbnails2: "SERONDA-PG-XXXX.jpg" (uppercase, no zero-padding for 1011-1012)
+                return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/thumbnails2/${fileId}.jpg`;
+            } else if (num < 3019) {
+                // thumbnails3: "SERONDA-PG-XXXX.jpg" (uppercase)
+                return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/thumbnails3/${fileId}.jpg`;
+            } else {
+                // thumbnails4: "SERONDA-PG-XXXX.jpg" (uppercase)
+                return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/thumbnails4/${fileId}.jpg`;
+            }
+        }
+
+        // Get big image URL based on file number
+        function getBigUrl(fileId) {
+            const num = parseInt(fileId.replace('SERONDA-PG-', ''), 10);
+            
+            if (num >= 3019) {
+                return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/Big4/${fileId}.jpg`;
+            } else if (num >= 2045) {
+                return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/Big3/${fileId}.jpg`;
+            }
+            
+            return null;  // No big version for numbers < 2045
+        }
+
+        // Check if file has a big version
+        function hasBigVersion(fileId) {
+            const num = parseInt(fileId.replace('SERONDA-PG-', ''), 10);
+            return num >= 2045;
+        }
+
+        function createGalleryItem(item, dataMap) {
             const div = document.createElement('div');
             div.className = 'gallery-item';
             
             const imageUrl = getThumbUrl(item.File);
-            console.log(`Creating gallery item for ${item.File}, thumb URL: ${imageUrl}`);
             
             div.onclick = () => {
-                const bigUrl = getBigUrl(item.File);
-                if (bigUrl) {
-                    openModal(item, bigUrl);
+                // Look up the item by File ID in the data map
+                const correctItem = dataMap[item.File];
+                console.log('Clicked:', item.File, 'Data:', correctItem);
+                
+                if (hasBigVersion(item.File)) {
+                    const bigUrl = getBigUrl(item.File);
+                    openModal(correctItem, bigUrl);
                 } else {
-                    openModalWithoutImage(item);
+                    openModalWithoutImage(correctItem);
                 }
             };
             
             const img = document.createElement('img');
-            img.src = imageUrl || '';
+            img.src = imageUrl;
             img.alt = item.File;
             img.loading = 'lazy';
             img.onerror = () => {
-                console.error(`Failed to load image: ${imageUrl}`);
+                console.error('Failed to load:', imageUrl);
                 div.classList.add('error');
                 div.innerHTML = `<div class="error-icon">?</div>`;
             };
@@ -654,7 +556,7 @@ SERONDA-PG-3019,NA,"Abstract composite photo design with watercolor textures, so
             img.src = bigUrl;
             img.style.display = 'block';
             img.onerror = () => {
-                console.error(`Failed to load big image: ${bigUrl}`);
+                console.error('Failed to load big image:', bigUrl);
                 img.style.display = 'none';
             };
             
@@ -742,20 +644,19 @@ SERONDA-PG-3019,NA,"Abstract composite photo design with watercolor textures, so
             if (e.target === document.getElementById('modal')) closeModal();
         });
 
-        async function initGallery() {
+        function initGallery() {
             try {
-                // Build asset map from GitHub API
-                await buildAssetMap();
-                
                 // Parse CSV data
                 galleryData = parseCSV(CSV_DATA);
+                const dataMap = createDataMap(galleryData);
                 const gallery = document.getElementById('gallery');
                 
-                console.log(`Rendering ${galleryData.length} gallery items`);
+                console.log('Gallery data:', galleryData);
+                console.log('Data map:', dataMap);
                 
                 galleryData.forEach(item => {
                     if (item.Prompt && item.Prompt !== 'NA') {
-                        const galleryItem = createGalleryItem(item);
+                        const galleryItem = createGalleryItem(item, dataMap);
                         gallery.appendChild(galleryItem);
                     }
                 });
