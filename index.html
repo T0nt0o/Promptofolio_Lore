@@ -5,182 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lore Playground Gallery</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background-color: #050505;
-            color: #e5e5e5;
-            font-family: 'Inter', sans-serif;
-            min-height: 100vh;
-        }
-
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 40px;
-            background: #000;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            z-index: 1000;
-            border-bottom: 1px solid #222;
-        }
-
-        .logo {
-            font-size: 18px;
-            font-weight: 700;
-            background: linear-gradient(45deg, #d4af37, #ffb6c1, #d4af37);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: metallic 3s linear infinite;
-        }
-
-        @keyframes metallic {
-            to { background-position: 200% center; }
-        }
-
-        .subtitle {
-            font-size: 10px;
-            color: #666;
-            text-transform: uppercase;
-        }
-
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 8px;
-            padding: 50px 10px 40px;
-        }
-
-        .item {
-            aspect-ratio: 1;
-            background: #111;
-            cursor: pointer;
-            overflow: hidden;
-        }
-
-        .item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.2s;
-        }
-
-        .item:hover img {
-            transform: scale(1.05);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            max-width: 900px;
-            width: 100%;
-            display: flex;
-            gap: 30px;
-        }
-
-        .modal-content img {
-            max-width: 400px;
-            max-height: 80vh;
-            object-fit: contain;
-        }
-
-        .modal-info {
-            flex: 1;
-            background: #0a0a0a;
-            padding: 20px;
-            border: 1px solid #222;
-        }
-
-        .modal-close {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            color: #888;
-            font-size: 30px;
-            cursor: pointer;
-        }
-
-        .modal-close:hover {
-            color: #fff;
-        }
-
-        .field {
-            margin-bottom: 15px;
-        }
-
-        .label {
-            font-size: 10px;
-            color: #666;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-        }
-
-        .value {
-            font-size: 13px;
-            color: #ccc;
-            background: #111;
-            padding: 10px;
-            border: 1px solid #222;
-            word-break: break-word;
-        }
-
-        .copy-btn {
-            background: #1a1a1a;
-            border: 1px solid #333;
-            color: #888;
-            padding: 5px 10px;
-            font-size: 10px;
-            cursor: pointer;
-            margin-left: 10px;
-        }
-
-        .copy-btn:hover {
-            background: #2d1b4e;
-            color: #fff;
-        }
-
-        .copy-btn.copied {
-            background: #1b4e2d;
-            color: #8f8;
-        }
-
-        .seed {
-            font-family: monospace;
-            color: #d4af37;
-        }
-
-        @media (max-width: 700px) {
-            .modal-content {
-                flex-direction: column;
-            }
-            .modal-content img {
-                max-width: 100%;
-            }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #050505; color: #e5e5e5; font-family: 'Inter', sans-serif; min-height: 100vh; }
+        header { position: fixed; top: 0; left: 0; right: 0; height: 40px; background: #000; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 1000; border-bottom: 1px solid #222; }
+        .logo { font-size: 18px; font-weight: 700; background: linear-gradient(45deg, #d4af37, #ffb6c1, #d4af37); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: metallic 3s linear infinite; }
+        @keyframes metallic { to { background-position: 200% center; } }
+        .subtitle { font-size: 10px; color: #666; text-transform: uppercase; }
+        .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; padding: 50px 10px 40px; }
+        .item { aspect-ratio: 1; background: #111; cursor: pointer; overflow: hidden; }
+        .item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.2s; }
+        .item:hover img { transform: scale(1.05); }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.95); z-index: 2000; align-items: center; justify-content: center; padding: 40px; }
+        .modal.active { display: flex; }
+        .modal-content { max-width: 900px; width: 100%; display: flex; gap: 30px; }
+        .modal-content img { max-width: 400px; max-height: 80vh; object-fit: contain; }
+        .modal-info { flex: 1; background: #0a0a0a; padding: 20px; border: 1px solid #222; max-height: 80vh; overflow-y: auto; }
+        .modal-close { position: fixed; top: 20px; right: 20px; background: none; border: none; color: #888; font-size: 30px; cursor: pointer; }
+        .modal-close:hover { color: #fff; }
+        .field { margin-bottom: 15px; }
+        .label { font-size: 10px; color: #666; text-transform: uppercase; margin-bottom: 5px; display: flex; align-items: center; }
+        .value { font-size: 13px; color: #ccc; background: #111; padding: 10px; border: 1px solid #222; word-break: break-word; }
+        .copy-btn { background: #1a1a1a; border: 1px solid #333; color: #888; padding: 5px 10px; font-size: 10px; cursor: pointer; margin-left: 10px; }
+        .copy-btn:hover { background: #2d1b4e; color: #fff; }
+        .copy-btn.copied { background: #1b4e2d; color: #8f8; }
+        .seed { font-family: monospace; color: #d4af37; }
+        @media (max-width: 700px) { .modal-content { flex-direction: column; } .modal-content img { max-width: 100%; } }
     </style>
 </head>
 <body>
@@ -188,66 +37,43 @@
         <div class="logo">LORE</div>
         <div class="subtitle">Playground gallery</div>
     </header>
-
     <div class="gallery" id="gallery"></div>
-
     <div class="modal" id="modal">
         <button class="modal-close" onclick="closeModal()">&times;</button>
         <div class="modal-content">
             <img id="modalImg" src="" alt="">
             <div class="modal-info">
-                <div class="field">
-                    <div class="label">Seed <button class="copy-btn" onclick="copySeed()">Copy</button></div>
-                    <div class="value seed" id="modalSeed"></div>
-                </div>
-                <div class="field">
-                    <div class="label">Prompt <button class="copy-btn" onclick="copyPrompt()">Copy</button></div>
-                    <div class="value" id="modalPrompt"></div>
-                </div>
-                <div class="field">
-                    <div class="label">Negative <button class="copy-btn" onclick="copyNegative()">Copy</button></div>
-                    <div class="value" id="modalNegative"></div>
-                </div>
+                <div class="field"><div class="label">ID <button class="copy-btn" onclick="copyId()">Copy</button></div><div class="value" id="modalId"></div></div>
+                <div class="field"><div class="label">Model</div><div class="value" id="modalModel"></div></div>
+                <div class="field"><div class="label">Filter</div><div class="value" id="modalFilter"></div></div>
+                <div class="field"><div class="label">Seed <button class="copy-btn" onclick="copySeed()">Copy</button></div><div class="value seed" id="modalSeed"></div></div>
+                <div class="field"><div class="label">Prompt <button class="copy-btn" onclick="copyPrompt()">Copy</button></div><div class="value" id="modalPrompt"></div></div>
+                <div class="field"><div class="label">Negative <button class="copy-btn" onclick="copyNegative()">Copy</button></div><div class="value" id="modalNegative"></div></div>
             </div>
         </div>
     </div>
-
     <script>
-        // Liste des images avec URLs directes
-        var images = [
-            { csvId: "SERONDA-PG-0001", url: "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/refs/heads/thumbnails1/Seronda-PG-1.jpg" },
-            { csvId: "SERONDA-PG-0002", url: "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/refs/heads/thumbnails1/Seronda-PG-2.jpg" },
-            { csvId: "SERONDA-PG-0003", url: "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/refs/heads/thumbnails1/Seronda-PG-3.jpg" },
-            { csvId: "SERONDA-PG-0004", url: "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/refs/heads/thumbnails1/Seronda-PG-4.jpg" },
-            { csvId: "SERONDA-PG-0005", url: "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/refs/heads/thumbnails1/Seronda-PG-5.jpg" }
-        ];
-
-        // Données CSV
-        var csvData = {
-            "SERONDA-PG-0001": { seed: "123456789", prompt: "A beautiful sunset over mountains", negative: "ugly, blurry, distorted" },
-            "SERONDA-PG-0002": { seed: "987654321", prompt: "A portrait of a woman in cyberpunk style", negative: "low quality, deformed" },
-            "SERONDA-PG-0003": { seed: "456789123", prompt: "Abstract geometric shapes in neon colors", negative: "messy, unclear" },
-            "SERONDA-PG-0004": { seed: "789123456", prompt: "A forest with magical glowing lights", negative: "dark, scary" },
-            "SERONDA-PG-0005": { seed: "321654987", prompt: "A modern city skyline at night", negative: "blurry, low resolution" }
-        };
+        var images = [{"csvId": "SERONDA-PG-0001", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-1.jpg", "prompt": "A surreal illustration features a young woman with long, straight black hair and bangs sitting at an abstractly designed table holding a delicate teacup adorned with intricate blue and gold patterns. Her large, expressive eyes are accentuated with vibrant rainbow-colored makeup, creating a mesmerizing effect against her pale skin. The woman has a contemplative expression, gazing downward as she holds the cup with both of her anatomically perfect hands. She wears a colorful floral-patterned top with elaborate designs in shades of green, orange, pink, yellow, purple, and red on the sleeves. On the table, there are three cups of coffee or tea, each uniquely styled. A light green cup with ridged edges sits on a saucer to the left filled with steaming light brown liquid. An orange-brown cup with dark brown liquid is centrally placed on a white saucer. To the right another peach-colored cup rests on a saucer. The background depicts a cosmic scene filled with swirling nebulae, planets, stars, and other celestial elements. These include an amber-orange spiral planet in the upper left comer, variously sized spherical objects in shades of red, green, and blue scattered throughout and abstract colorful cloud-like formations intertwining in vibrant hues of green, blue, pink, purple, yellow, and orange. Small crescent moons and floating flowers are interspersed among the starry expanse. A small boat-shaped object containing mysterious symbols floats near the top left while two abstract shapes resembling feces or mask-like figures appear in the bottom right comer. The overall mood is dreamy, ethereal, and introspective, enhanced by the high contrast between the vivid colors of the foreground and the deep blacks of the cosmic backdrop. The composition blends realistic portrait elements with fantastical cosmic imagery, creating a whimsical and otherworldly atmosphere that emphasizes the surreal quality of the artwork.", "negative": "ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, extra limbs, EXTRA FINGERS, awkward hands, poorly drawn face, poorly drawn hands, missing fingers, nudity, nude g", "model": "Playground v3 (beta)", "filter": ""}, {"csvId": "SERONDA-PG-0002", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-2.jpg", "prompt": "I just want to say I'll remain here watching your amazing art I II be mentioning for ours if I had to make a list of all the creators I admire and follow, and are everyday a source of inspiration and a reminder that there's always something beautiful around you, if you know where to look. In case someone wants to chat or figure out what I am going to do next where I'll keep creating (I have no clue at this moment), my discord user is \" seronda \"", "negative": "ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth Iq", "model": "Playground V2.5", "filter": "Photorealism"}, {"csvId": "SERONDA-PG-0003", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-3.jpg", "prompt": "The Devil and God Are Raging Inside Me, in weathered wall, textures, grunge, by Broad strokes, in the style of SCAF", "negative": "ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth q", "model": "Playground v2S", "filter": "Photorealism"}, {"csvId": "SERONDA-PG-0004", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-4.jpg", "prompt": "In the style of Aykut Aydogdu, Odilon Redon and Alexander Kemp. Colorful gothic photoillustration, ultra-surreal. Volumetric lighting.", "negative": "ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth q", "model": "Playground v2S", "filter": "Photorealism"}, {"csvId": "SERONDA-PG-0005", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-5.jpg", "prompt": "Concept art featuring a beautiful woman superimposed against a maximalist landscape, her form exuding a surreal minimal collage aesthetic palette consists of cool tones and grim, dreamy undercurrents, the art is macabre with undertone of grunge, mastered in the luminescent style of Catrin Welz-Stein meets Naoko Takeuchi, designed with profound chromatic aberration, enigmatic liminal spaces, double exposure effect", "negative": "ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth", "model": "Playground V2.5", "filter": ""}, {"csvId": "SERONDA-PG-0006", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-6.jpg", "prompt": "Assembly of evocative horror imagery, a portrait captures the uncanny dance of a disembodied Asian woman blended with nightmarish floral elements, in the enigmatic styles reminiscent of Jan Svankmajer, HR Giger, Stephen Gammell, Emil Melmoth, Angelina Wrona, Tomas Saraceno, Sopheap Pich, Liam Gillick, and Naoto Hattori, composed in wide", "negative": "ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth ig", "model": "Playground v2.5", "filter": "Photorealism"}, {"csvId": "SERONDA-PG-0007", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-7.jpg", "prompt": "Concept art featuring a beautiful woman superimposed against a maximalist landscape, her form exuding a surreal minimal collage aesthetic, palette consists of cool tones and grim, dreamy undercurrents, the art is macabre with undertone of grunge, mastered in the luminescent style of Catrin Welz-Stein meets Naoko Takeuchi, designed with profound chromatic aberration, enigmatic liminal spaces, double exposure effect", "negative": "ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth 2", "model": "Playground v2.5", "filter": "Photorealism"}, {"csvId": "SERONDA-PG-0008", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-8.jpg", "prompt": "Vibrant Dark academia aesthetic oil painting embodying moody and mysterious atmosphere, epic fantasy elements weave through the whimsical and dreamy vintage composition, style influenced by Pablo Amaringo, Emil Melmoth, cinematic ambiance, dramatic lighting, high contrast chiaroscuro effects, immersive depth of field, rich textures, gothic", "negative": "ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth O", "model": "DPM 2M Karras Playground v2.5", "filter": ""}, {"csvId": "SERONDA-PG-0009", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-9.jpg", "prompt": "In the style Odilon Redon, Moebius, Macabre portraiture, the beautiful and the grotesque interwoven in a frenetic ecstatic neverending dance to bring out a portrait of woman in decay and decadence. In the dark style of Marco Mazzoni fused with the distressed photo style of John Batho. Melancholic brooding atmosphere. Grunge moody cool toned desaturated color palette. Textured.", "negative": "ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth Cq", "model": "DPM2M Karras Playground v2.5", "filter": "Photorealism"}, {"csvId": "SERONDA-PG-0010", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-10.jpg", "prompt": "In the style of Aykut Aydogdu, Odilon Redon and Alexander Kemp. Colorful gothic photoillustration, ultra-surreal. Volumetric lighting.", "negative": "ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth", "model": "Playground v2.5", "filter": "Photorealism"}, {"csvId": "SERONDA-PG-0011", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-11.jpg", "prompt": "surreal minimal collage, concept art, grim, dreamy, dark art, macabre, cool toned, grunge. Stylized painting surreal colors, chromatic aberration, double exposure effect a beautiful woman superimposed against a maximalist landscape, liminal space. In the style of, Catrin Welz-Stein, burtonian, Naoko Takeuchi", "negative": "ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth iQ Jj", "model": "Playground v2.5", "filter": ""}, {"csvId": "SERONDA-PG-0012", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-12.jpg", "prompt": "Collage blending retrofuturism, surrealism, realism infused with fantasy elements, domme centrally positioned amidst anachronistic devices, ethereal creatures mingling with Art Deco shapes, dreamlike cityscape backdrop, neon hues contrasting monochrome palette, photomontage, digital painting, octane rendering", "negative": "ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth ÎQ", "model": "Playground v2.5", "filter": "Photorealism"}, {"csvId": "SERONDA-PG-0013", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-13.jpg", "prompt": "In the style of Aykut Aydogdu, Odilon Redon and Alexander. Colorful gothic photoillustration, surreal. Volumetric lighting.", "negative": "ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth Q", "model": "Playground v2.5", "filter": ""}, {"csvId": "SERONDA-PG-0014", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-14.jpg", "prompt": "Woman embodying decay and decadence in a dance of macabre portraiture, fusion of Marco Mazzoni's dark style with John Batho's photo-distressed technique, melancholic, brooding atmosphere, grunge mood, cool-toned desaturated color palette, textured, ecstatic yet never-ending dance portrayed, ultra fine, dramatic lighting.", "negative": "ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth", "model": "DPM2M Karras Playground v2.5", "filter": "Photorealism"}, {"csvId": "SERONDA-PG-0015", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-15.jpg", "prompt": "Abstract composite photo design with watercolor textures, soft pastel colors, organic flowing shapes, close up, focus on, copy space, double exposure silhouette with creative natural elements.", "negative": "ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth", "model": "Playground v2.5", "filter": "Photorealism"}, {"csvId": "SERONDA-PG-0016", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-16.jpg", "prompt": "V 42 Download Copy link Following Imagine a collage of retrofuturistic and surreal elements that have been blended with stark realism, dictated by a dominant theme of a 'Domme'. Positioned across the composition, these elements talk of power, control, authority, expressed through iconic retrofuturist symbols, surreal visuals, and hyper-realistic fantasy aspects. Encapsulate the key themes of retrofuturism and surrealism along with pronounced elements of", "negative": "ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth", "model": "Playground v2.5", "filter": "Photorealism"}, {"csvId": "SERONDA-PG-0018", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-18.jpg", "prompt": "Vaporwave nostalgia merges with maximalist landscapes, surreal colors clash and harmonize, cool-toned grunge aesthetic infuses a dreamlike Burtonian atmosphere as a retro anime woman finds herself superimposed against a chromatic aberration world, the backdrop a fusion of liminal space and Naoko Takeuchi's influence, with a touch of Catrin Welz-Stein's imaginative approach, double exposure, styl", "negative": "ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth ff", "model": "Playground v2.5", "filter": "Photorealism"}, {"csvId": "SERONDA-PG-0019", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-19.jpg", "prompt": "Princess Guardian of the Galaxy. Full height portrait of a beautiful woman dressed as a futuristic interpretation of Sailor Moon, backlighting with an angelic glow halo, action pose, dynamic poster, kinetic art, ready to fight to defend the galaxy, embossed, charming, dignified, and superimposed against the vast space, grunge texture, a double exposure effect for a dreamy quality, surreal colors, retro galaxy background, dramatic lighting, ultra fine, digital illustration, in the style of artgerm, rossdraws, tanya shatseva, celestialpunk", "negative": "ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth 2", "model": "Stable Diffusion XL", "filter": "Photorealism"}, {"csvId": "SERONDA-PG-0021", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-21.jpg", "prompt": "Quirky, beautiful alien bartender, pours cosmic beverages at an interstellar rest stop, humanoid features, captivates patrons with a graceful, alluring posture, pastel-tinted environment exudes liveliness and lightness, a touch sensuous, eclectic mix of alien species rendezvousing, creating a tapestry of intergalactic conviviality, digital painting, vibrant colors, soft lighting", "negative": "ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth", "model": "Playground v2.5", "filter": "Photorealism"}, {"csvId": "SERONDA-PG-0022", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-22.jpg", "prompt": "Mist-enveloped forest under starlight creek murmurs gentle, mirror-like reflections, leaves whispering secrets, palette of star-kissed autumn leaves meeting the mystique of a night sky, outlined by the calligraphic touch of Grim Grinser, Gustaf Tenggren's influence felt through diffuse illumination casting an ethereal glow, evoking a poignant spiritual communion with nature, enhanced by the", "negative": "ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth Q5", "model": "Playground v2.5", "filter": ""}, {"csvId": "SERONDA-PG-0023", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-23.jpg", "prompt": "Forest photo-illustration capturing peaceful serenity, leaves rustling, creek babbling, enveloped in a misty atmosphere akin to a dreamscape, offering stillness amidst chaos, intricate play of highlights and shadows, volumetric autumn colors, crafted with a Dan Hillier, Sean Bagshaw, Aaron Reed's artistic touch, captured with the precision of a Hasselblad X2D 100C. HDR", "negative": "ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth Q5 V 35", "model": "DPM 2M Karras Playground v2.5", "filter": "Subtle Photorealism"}, {"csvId": "SERONDA-PG-0024", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-24.jpg", "prompt": "Digital art. forest scene bathed in serenity, leaves whispering softly, creek babbling rhythmically, mist weaving through trees adding to the ethereal mood, spotlighting tranquility amidst daily hustle, Dan Hillier meets Sean Bagshaw and Aaron Reed, Hasselblad X2D100C, high dynamic range, raw file format 55mm lens, complex focus, HDR processing, deep contrast beautifully", "negative": "ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth Q5 V 41", "model": "DPM 2M Karras Playground v2.5", "filter": "Subtle Photorealism"}, {"csvId": "SERONDA-PG-0025", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-25.jpg", "prompt": "Serene forest photo-illustration with rustling leaves, running creek, soothing sounds, misty setting, digital art in the style of Doppler effect sense deprivation, volumetric autumn colors, intricate highlights and shadows, depicting a refuge of stillness, reminiscent of Dan Hillier, Sean Bagshaw, Aaron Reed, shot on Hasselblad X2D100C, ultra high definition, high dynamic range", "negative": "ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth to", "model": "Playground v2.5", "filter": "Photorealism"}, {"csvId": "SERONDA-PG-0026", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-26.jpg", "prompt": "Peaceful serene forest illustration reflecting rustling leaves, streaming creek, soothing sounds, mist-enveloped ambiance, digital art echoing Doppler effect sense deprivation, volumetric autumn hues, accentuating highlights and shadows, inspired by Dan Hillier, Sean Bagshaw, Aaron Reed, captured through Hasselblad X2D 100C, UHD, HDR. RAW, 55mm lens", "negative": "ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth Cq", "model": "Playground v2.5", "filter": "Photorealism"}, {"csvId": "SERONDA-PG-0027", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-27.jpg", "prompt": "A slumbering figure cradling the heaviness of fatigue in a plain gray room, soft diffused lighting casting gentle shadows across the form, texture of worn fabric, muted color palette, sense of quiet solitude, soft focus, ultra realistic.", "negative": "ugly, anime, deformed, noisy, blurry, distorted, out off focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth O", "model": "Playground v2.5", "filter": "Photorealism"}, {"csvId": "SERONDA-PG-0028", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-28.jpg", "prompt": "Sign displaying the words \"I am very tired\" in weary, drooping typography, hues of deep blue and gray, heavy shadows casting over each letter, placed on a sleep-deprived person's desk drowned in the glow of a single dim desk lamp, surrounded by scattered coffee cups, empty snack wrappers, and crumpled papers, illustrating a late-night struggle with fatigue, digital painting, dramatic lighting, ultra realistic", "negative": "ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth Cq", "model": "Playground v2.5", "filter": "Photorealism"}, {"csvId": "SERONDA-PG-0029", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-29.jpg", "prompt": "A pint-sized panda pladdly cradling a steaming, mismatched teacup, vulnerability etched in its brown, button-like eyes as it expresses the profound weariness in its heart, Chinese-style room, bamboo detailing, splashed with tea hues, ink wash painting, ink-dipped brushes, traditional ambiance, sepia tone, vintage feel, delicate shading, high contrast meticulous attention to details.", "negative": "ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth Q5 13", "model": "Playground v2.5", "filter": ""}, {"csvId": "SERONDA-PG-0030", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-30.jpg", "prompt": "A weary individual slouched over a desk, head resting on arms, surrounded by scattered papers and a dim desk lamp casting long shadows, expression of exhaustion, backlighting highlights silhouette, sepia tones, chiaroscuro effect digital illustration.", "negative": "ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth iQ", "model": "Playground v2.5", "filter": "Photorealism"}, {"csvId": "SERONDA-PG-0032", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-32.jpg", "prompt": "westempunk. wild wild west intense red landscape surreal pastoral sci-fi, retrofuturistic, cowboy core, desertscape, golden hour, red skies, ultra- surreal, strange, radiant burning sun", "negative": "ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth", "model": "Playground v2.5", "filter": "Photorealism"}, {"csvId": "SERONDA-PG-0033", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-33.jpg", "prompt": "Join the first PG flashmob anniversary, and possibly the last! To celebrate, participants have chosen to revive the album covers theme. So, grab your mouse or your stylus, and create a parody of your favorite (or not-so-favorite) album cover.", "negative": "ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth Cq", "model": "Stable Diffusion XL", "filter": ""}, {"csvId": "SERONDA-PG-0034", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-34.jpg", "prompt": "chessboard floating in the galaxy, close-up. dreamy cosmic atmosphere, vibrant cool toned hues, sd-fi, whimsical, the chess pieces are dressed as astronauts, ultra-fine, original concept digital matte painting", "negative": "ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth iO 2", "model": "Playground v2.5", "filter": ""}, {"csvId": "SERONDA-PG-0035", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-35.jpg", "prompt": "fashion photography, woman with electric blue hair and red lipstick, setting in bed holding up enormous white pillow to her waist as if she is off the bottom of it Has blue patterns on her tights like blue and white china porcelain, in the style of Ray Caesar, with soft colors.", "negative": "ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth 3 V 96", "model": "Playground v2.5", "filter": "Photorealism"}, {"csvId": "SERONDA-PG-0037", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-37.jpg", "prompt": "Grunge-style acrylic dreamscape evoking Twilight Tales, starry sky mingling with stardust and chaotic energy threads from which stars whimsically hanging from the sky. folk fairytale elements intertwine, lisa aisato, Patricia Ariel. Bri Buckley, naive", "negative": "ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth Q5 2", "model": "Playground v2.5", "filter": "Photorealism"}, {"csvId": "SERONDA-PG-0038", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-38.jpg", "prompt": "A festive photograph capturing two young women engaged in creating a traditional Diwali rangoli design at night The women are dressed in vibrant traditional Indian outfits, with the woman on the left wearing an orange saree with green accents and a matching dupatta, adorned with silver bangles, earrings, and a maang tikka. The woman on the right is dressed in a yellow-orange saree with intricate designs and accessories, including bangles, a necklace, earrings, and a maang tikka. Both women possess beautiful detailed faces with distinctive features. Their eyes are halfclosed, contributing to the spiritual transcending character of the task they are performing. Their hands are perfectly anatomically correct They are seated on the ground, leaning over a colorful rangoli design composed of vibrant powders arranged in intricate patterns, including flowers, leaves, and geometric shapes. The design features a central arrangement of small lit candles in various colored bowls, casting a warm glow over the scene. The surrounding powders are arranged in shades of red, blue, green, yellow, purple, pink, and orange, creating a visually striking and textured surface. The background is dark, emphasizing the illuminated designs and the women's faces, which are softly lit by the candlelight The overall mood is celebratory and joyous, capturing the essence of the festival and the shared activity of the women. The photograph is taken from a slightly elevated angle, providing a clear view of the intricate details of the rangoli and the traditional attire of the women.", "negative": "ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, extra limbs, poorly drawn face, hands, fingers, nudity, nude if 13 55", "model": "Playground v3 (beta)", "filter": ""}, {"csvId": "SERONDA-PG-0039", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-39.jpg", "prompt": "deranged Japanese punk beautiful singer, mixed media, line art and acrylic, textured, thick layers that add to the grungy gritty effect action pose, desaturated cool colors, by Caricature art palette knife, dry", "negative": "ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth tO", "model": "Playground v2.5", "filter": "Watercolor"}, {"csvId": "SERONDA-PG-0040", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-40.jpg", "prompt": "deranged Japanese punk beautiful singer, mixed media, line art and acrylic, textured, thick layers that add to the grungy gritty effect action pose, desaturated cool colors, by Caricature art, palette knife, dry", "negative": "ugly, deformed, noisy, blurry, distorted, out of focus, bad anatomy, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth Jq 2", "model": "Playground v2.5", "filter": ""}, {"csvId": "SERONDA-PG-0041", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-41.jpg", "prompt": "Wide shot photoillustration combining Dan Hillier's, Andreas Lie's, and Android Jones's styles depicting diverse biomes merging into a magical otherworldly landscape, showcasing intricate flora and vegetation in a biological dance, sci-fi theme with a retro and vintage flair, captured during the silver hour, moonlit and starlit ambiance, with complex contrast interplay of light and shadow creating an amazing breathtaking", "negative": "ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth", "model": "Playground v2.5", "filter": ""}, {"csvId": "SERONDA-PG-0042", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-42.jpg", "prompt": "dreamy mood, dreamy atmosphere. Beautiful seductive smiling beautiful stunning fairy by agnes cedle julie doucet moebius, intricated details, sitting, facing camera, hair styled in a bun. bend over posture, full body portrait extremely luminous bright design, soft colours, by Karol Bak and Jean-Baptiste Monge", "negative": "ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth O", "model": "Playground v2.5", "filter": ""}, {"csvId": "SERONDA-PG-0043", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-43.jpg", "prompt": "dreamy mood, dreamy atmosphere. Beautiful seductive smiling beautiful stunning fairy by agnes cecile julie doucet moebius, intricated details, sitting, facing camera, hair styled in a bun, bend over posture, full body portrait extremely luminous bright design, soft colours, by Karol Bak and Jean-Baptiste Monge", "negative": "ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth", "model": "Playground v2.5", "filter": "Photorealism"}, {"csvId": "SERONDA-PG-0044", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-44.jpg", "prompt": "dreamy atmosphere, cool toned, blue hour, grunge, gritty, on textured worn canvas, layered acrylic, concept art of Twilight Tales, stories and history under the starry sky, stardust folk fairytale fantasy, chaos magik, magic realism, magical, evocative, ethereal glowin the style of Craola, Arthur Rackham, Anna Dittmann, remedios varo, Mira Nedyalkova, Catrin Welz-Stein, burtonian touch", "negative": "ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth iO", "model": "Playground v2.5", "filter": ""}, {"csvId": "SERONDA-PG-0045", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-45.jpg", "prompt": "dreamy mood, dreamy atmosphere. Beautiful seductive smiling beautiful stunning fairy by agnes cecile julie doucet moebius, intricated details, sitting, facing camera, hair styled in a bun, bend over posture, full body portrait extremely luminous bright design, soft colours, by Karol Bak and Jean-Baptiste Monge", "negative": "ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth Fa 5", "model": "Playground v2.5", "filter": "Photorealism"}, {"csvId": "SERONDA-PG-0047", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-47.jpg", "prompt": "Otherworldly forest spirit female, glowing luminously in a dreamy forest atmosphere, hair in a blonde bun, showcasing perfect hand touching a branch, draped in a long white gown speckled with morning dew, amid a triadic dusk setting, ethereal backlighting painting the scene, Luis Royo and Daria Endresen-inspired, photorealistic, hyper realistic, ultra clear, dramatic lighting.", "negative": "ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth iQ", "model": "Playground v2.5", "filter": "Photorealism"}, {"csvId": "SERONDA-PG-0048", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-48.jpg", "prompt": "Glistening glaciers, sf, fantasy, iridiscent reflects on the ice and the surface of the frozen water, at dusk, with beautiful gradient blue hues in the sky, from pastel to vivid brights, from bright to deep and dark, blue hour, chaotic stunning interplay of light and shadow donning an ethereal magical flair to the digital art. UHD.", "negative": "ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth V 101 cb Download cP Copy link fO", "model": "Playground v2.5", "filter": "Watercolor"}, {"csvId": "SERONDA-PG-0049", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-49.jpg", "prompt": "A centered portrait photograph of a young woman with long, wavy dark brown hair standing in a pastel pink sleek bedroom millenial-style, while reading a book titled 'In Defense of Lost Causes' by Slavoj Zizek. The book is open, with the title and author's name dearly visible in large, bold black text on the front cover. The woman's expression is focused and concentrated, with her eyes intently on the pages and her lips slightly parted. She is wearing a dark navy blue sleeveless dress with a high-waisted belt tied into a bow at the waist creating a subtle but defined silhouette. Her hands are positioned with one holding the left side of the book and the other the right side, gripping it gently as she reads. The lighting is soft and even, illuminating her face and upper body without casting harsh shadows, creating a calm and intellectual mood. The image has a shallow depth of field, keeping the woman and the book in sharp focus while the background remains slightly blurred. The overall composition centers the subject and the book, capturing her from the waist up and emphasizing her engagement with the reading material.", "negative": "ugly, anime, deformed, noisy, blurry, distorted, out of focus, bad anatomy, cross-eyed, strabismus, poorly drawn eyes, assymetrical eyes, extra limbs, poorly drawn face, hands, fingers, nudity, nude, bad teeth, showing teeth q 49", "model": "Playground v2.5", "filter": "Photorealism"}, {"csvId": "SERONDA-PG-0050", "url": "https://raw.githubusercontent.com/T0nt0o/Promptofolio_Lore/thumbnails1/Seronda-PG-50.jpg", "prompt": "maximalist digital ultraviolet illustration, highly detailed, in the style of junko mizuno and hikari shimoda. a dark server room with neon glowing buttons and a neon glowing screen, a mysterious shadow silhouette lurks in the room, digital horror, dreary ciberdelics", "negative": "white hair, beard, makeup, anime, cartoon, white beard, blurry, long hair, long beard, foggy, lowres, blurred, grey beard, showing teeth, mouth open, teeth, poorly drawn, unrealistic, color red, blue eyes, hands, eyeshadow, bright green, poorly drawn eyes, antinatural, non natural, brown eyes, ugly, bad eyes, cross-eyes, strabismus, assymétrica I eyes, fingers ÎQ 40", "model": "Playground v2.5", "filter": ""}];
 
         var currentData = null;
 
-        // Créer la galerie
         var gallery = document.getElementById('gallery');
         images.forEach(function(imgInfo) {
             var item = document.createElement('div');
             item.className = 'item';
-            item.onclick = (function(data, url) {
+            item.onclick = (function(data) {
                 return function() {
-                    currentData = csvData[data.csvId];
-                    document.getElementById('modalImg').src = url;
-                    document.getElementById('modalSeed').textContent = currentData.seed;
-                    document.getElementById('modalPrompt').textContent = currentData.prompt;
-                    document.getElementById('modalNegative').textContent = currentData.negative;
+                    currentData = data;
+                    document.getElementById('modalImg').src = data.url;
+                    document.getElementById('modalId').textContent = data.csvId;
+                    document.getElementById('modalModel').textContent = data.model || '-';
+                    document.getElementById('modalFilter').textContent = data.filter || '-';
+                    document.getElementById('modalSeed').textContent = 'Seed: ' + data.negative.match(/seed[:\s]*(\d+)/i)?.[1] || 'N/A';
+                    document.getElementById('modalPrompt').textContent = data.prompt;
+                    document.getElementById('modalNegative').textContent = data.negative;
                     document.getElementById('modal').classList.add('active');
                 };
-            })(imgInfo, imgInfo.url);
+            })(imgInfo);
 
             var img = document.createElement('img');
             img.src = imgInfo.url;
@@ -271,9 +97,13 @@
             });
         }
 
-        function copySeed() { copyToClipboard(currentData.seed, event.target); }
+        function copyId() { copyToClipboard(currentData.csvId, event.target); }
         function copyPrompt() { copyToClipboard(currentData.prompt, event.target); }
         function copyNegative() { copyToClipboard(currentData.negative, event.target); }
+        function copySeed() { 
+            var seedMatch = currentData.negative.match(/seed[:\s]*(\d+)/i);
+            copyToClipboard(seedMatch ? seedMatch[1] : 'N/A', event.target); 
+        }
 
         document.onkeydown = function(e) {
             if (e.key === 'Escape') closeModal();

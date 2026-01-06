@@ -1,0 +1,9 @@
+{
+    "name": "Lore Playground Gallery",
+    "short_name": "Lore Gallery",
+    "description": "Gallery with data from Google Spreadsheet",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#050505",
+    "theme_color": "#000000"
+}
