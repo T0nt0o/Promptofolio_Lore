@@ -1,7 +1,7 @@
 {
     "name": "Lore Playground Gallery",
     "short_name": "Lore Gallery",
-    "description": "Gallery with data from Google Spreadsheet",
+    "description": "Full gallery with all 3163 images from Google Spreadsheet",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#050505",
