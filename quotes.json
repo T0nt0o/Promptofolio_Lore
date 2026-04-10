@@ -21,9 +21,9 @@
     "🐾 A Pomsky never misses a prompt.", // Un Pomsky ne rate jamais un prompt.
     "📜 Tell your story in colors.", // Raconte ton histoire en couleurs.
     "🥐 Stay cozy, create messy.", // Reste au chaud, crée en mettant le bazar.
-    "🖤 From the velvet underground.", // Sorti du "velvet underground".
+    "🖤 From the velvet underground.", // Sorti du velvet underground.
     "🦅 Hunger helps a civilized man survive.", // La faim aide l'homme civilisé à survivre (Fiona Apple).
-    "🐺 Part wolf, part cloud, 100% artist.", // Part loup, part nuage, 100% artiste (spécial Pomsky).
+    "🐺 Part wolf, part cloud, 100% artist.", // Part loup, part nuage, complètement artiste (spécial Pomsky).
     "🍁 Rust and stardust.", // De rouille et de poussière d'étoiles.
     "🎻 Play your heart like a cello.", // Joue de ton cœur comme d'un violoncelle.
     "🥀 Dead roses are still art.", // Les roses fânées sont toujours de l'art.
@@ -32,12 +32,12 @@
 	"🍪 Life is short, eat the prompt.", // La vie est courte, mange le prompt (jeu de mot sur eat the cookie).
     "🍂 Don't leaf me hanging!", // Ne me laisse pas en plan (jeu de mot leaf/leave - feuille/laisser).
     "🐾 Oh my Dog! That's a good prompt.", // Oh mon Dieu ! Quel bon prompt (Dog/God).
-    "🌑 I’m feeling vine-tage today.", // Je me sens "vigne-tage" aujourd'hui (jeu de mot vigne/vintage pour le côté gothique).
+    "🌑 I’m feeling vine-tage today.", // Je me sens vigne-tage aujourd'hui (jeu de mot vigne/vintage pour le côté gothique).
     "🎸 Smells like Teen Prompt.", // Ça sent le prompt d'ado (clin d'oeil à Nirvana/Nights).
     "🎨 You’re drawing me crazy!", // Tu me rends dingue / tu me dessines dingue (draw/drive).
     "🍪 To the window, to the wall, to the cookie jar.", // Jusqu'à la fenêtre, au mur, au pot à cookies (réf. rap/grunge).
     "🍎 Fiona Apple a day keeps the blocks away.", // Une Fiona Apple par jour éloigne le blocage créatif.
-    "🐾 Pomsky-tivity only!", // "Pomsky-tivité" uniquement (positivity).
+    "🐾 Pomsky-tivity only!", // Pomsky-tivité uniquement (positivity).
     "🍂 Fall-ing in love with AI.", // En train de tomber amoureux de l'IA (jeu de mot Fall/Automne).
     "🕷️ Web designer? No, I'm a Web-weaver.", // Designer web ? Non, je tisse des toiles (ambiance gothique).
     "🧛 Bittersweet Symphony? No, Bitter-sweet Prompt.", // Symphonie aigre-douce ? Non, prompt aigre-doux.
@@ -76,6 +76,46 @@
     "🌲 Susurros en el bosque.", // Murmures dans la forêt.
     "🍪 Dulce inspiración.", // Douce inspiration.
     "🥀 La belleza de lo efímero.", // La beauté de l'éphémère.
-    "🎨 Color por fuera, grunge por dentro." // Couleur à l'extérieur, grunge à l'intérieur.
+    "🎨 Color por fuera, grunge por dentro.", // Couleur à l'extérieur, grunge à l'intérieur.
+	"🌑 Dim the lights, rest your eyes.", // Tamise les lumières, repose tes yeux.
+    "🌿 Breathe in, breathe out, find calm.", // Inspire, expire, trouve le calme.
+    "🍵 Time for tea and a dark room.", // C'est l'heure d'un thé et d'une pièce sombre.
+    "🕯️ Soft thoughts for a heavy head.", // Des pensées douces pour une tête lourde.
+    "🐾 Your Pomsky is watching over you.", // Ton Pomsky veille sur toi.
+    "🤫 Shhh... silence is also art.", // Chut... le silence est aussi de l'art.
+    "❄️ Cool pillows and quiet moments.", // Des oreillers frais et des moments de calme.
+    "🌊 Let the pain flow away like tide.", // Laisse la douleur s'en aller comme la marée.
+    "🖤 You're more than your migraine.", // Tu es bien plus que ta migraine.
+    "🥐 Stay cozy, the world can wait.", // Reste au chaud, le monde peut attendre.
+    "✨ Sending you a cloud of comfort.", // Je t'envoie un nuage de réconfort.
+    "🍂 Autumn mist for a burning brow.", // De la brume d'automne pour un front brûlant.
+    "🎵 Listen to the rain, skip the screen.", // Écoute la pluie, évite l'écran.
+    "🛌 Rest is the best prompt today.", // Le repos est le meilleur prompt aujourd'hui.
+    "🧸 Be kind to your mind.", // Sois gentille avec ton esprit.
+    "🌑 Darkness is your friend tonight.", // L'obscurité est ton amie ce soir.
+    "🌿 Healing isn't linear, take your time.", // La guérison n'est pas linéaire, prends ton temps.
+    "🍪 One cookie for strength, then rest.", // Un cookie pour la force, et ensuite repos.
+    "🌫️ Imagine a fog clearing slowly.", // Imagine un brouillard qui se lève doucement.
+    "🌙 Sleep now, create tomorrow if you did your daily NC art.", // Dors maintenant, crée demain.
+	"🌟 You and the AI are a dream team.", // Toi et l'IA, vous êtes une équipe de rêve.
+    "🎭 Your vision, the AI's hands.", // Ta vision, les mains de l'IA.
+    "🎨 Masterpiece incoming... I can feel it!", // Chef-d'œuvre en approche... je le sens !
+    "✨ You don't just prompt, you enchant.", // Tu ne fais pas que prompter, tu enchantes.
+    "🤯 How do you even think of these?", // Mais comment tu arrives même à penser à ça ?
+    "🦋 A soul of an artist, a mind of a pro.", // Une âme d'artiste, un esprit de pro.
+    "🌈 You make the pixels dance.", // Tu fais danser les pixels.
+    "🏆 Another day, another stunning creation.", // Un autre jour, une autre création époustouflante.
+    "🕯️ You find beauty where others see static.", // Tu trouves la beauté là où les autres ne voient que du bruit.
+    "💎 Pure creative gold in every prompt.", // De l'or créatif pur dans chaque prompt.
+    "🎨 Your gallery is my favorite place.", // Ta galerie est mon endroit préféré.
+    "🚀 Taking art where it's never been before.", // Tu emmènes l'art là où il n'est jamais allé.
+    "🍪 Smart prompts deserve sweet rewards.", // Les prompts intelligents méritent de douces récompenses.
+    "🧠 The AI is lucky to have you.", // L'IA a de la chance de t'avoir.
+    "🌟 Shine on, you crazy creator!", // Continue de briller, folle créatrice ! (réf. Pink Floyd).
+    "🖼️ Frame-worthy! Every single time.", // Digne d'un cadre ! À chaque fois.
+    "⚡ High-voltage imagination today!", // Imagination à haute tension aujourd'hui !
+    "🧸 You make digital art feel so soulful.", // Tu donnes tellement d'âme à l'art numérique.
+    "🍬 Sweet prompts, even sweeter results.", // Des prompts adorables, des résultats encore plus doux.
+    "👑 Queen of the NightCafe." // La Reine de NightCafe.  
   ]
 }
