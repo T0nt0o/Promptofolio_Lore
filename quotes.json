@@ -4,6 +4,90 @@
     "⚡ High Voltage Creativity ⚡",
     "🧠 Prompting like a boss 🧠",
     "🌈 Color your world 🌈",
-    "✨ Make some magic ✨"
+    "✨ Make some magic ✨",
+	"🎨 Paint the silence.", // Peins le silence.
+    "🍪 One more cookie for the muse.", // Un cookie de plus pour la muse.
+    "🍂 Every leaf is a flower now.", // Chaque feuille est maintenant une fleur (Albert Camus).
+    "🐾 Pomsky power: Small but mighty!", // Puissance Pomsky : Petit mais costaud !
+    "🌑 Darkness is a canvas too.", // L'obscurité est aussi une toile.
+    "🍎 I've been a bad, bad girl...", // J'ai été une très, très méchante fille (Fiona Apple).
+    "🕯️ In the gloom, we bloom.", // Dans l'ombre, nous fleurissons.
+    "🐕 Fluffier than your average prompt.", // Plus duveteux que ton prompt habituel.
+    "🎸 Grunge isn't dead, it's just aesthetic.", // Le grunge n'est pas mort, c'est juste esthétique.
+    "🌧️ October is a state of mind.", // Octobre est un état d'esprit.
+    "🦋 I'm a tulip in a cup.", // Je suis une tulipe dans une tasse (Fiona Apple).
+    "☕ Sweaters, prompts & hot cocoa.", // Pulls, prompts et chocolat chaud.
+    "🕸️ Beautifully haunted creativity.", // Une créativité magnifiquement hantée.
+    "🐾 A Pomsky never misses a prompt.", // Un Pomsky ne rate jamais un prompt.
+    "📜 Tell your story in colors.", // Raconte ton histoire en couleurs.
+    "🥐 Stay cozy, create messy.", // Reste au chaud, crée en mettant le bazar.
+    "🖤 From the velvet underground.", // Sorti du "velvet underground".
+    "🦅 Hunger helps a civilized man survive.", // La faim aide l'homme civilisé à survivre (Fiona Apple).
+    "🐺 Part wolf, part cloud, 100% artist.", // Part loup, part nuage, 100% artiste (spécial Pomsky).
+    "🍁 Rust and stardust.", // De rouille et de poussière d'étoiles.
+    "🎻 Play your heart like a cello.", // Joue de ton cœur comme d'un violoncelle.
+    "🥀 Dead roses are still art.", // Les roses fânées sont toujours de l'art.
+    "🍪 Cookies: the ultimate brain fuel.", // Les cookies : le carburant ultime du cerveau.
+    "🌲 Lost in the pines of imagination.", // Perdu dans les pins de l'imagination.
+	"🍪 Life is short, eat the prompt.", // La vie est courte, mange le prompt (jeu de mot sur eat the cookie).
+    "🍂 Don't leaf me hanging!", // Ne me laisse pas en plan (jeu de mot leaf/leave - feuille/laisser).
+    "🐾 Oh my Dog! That's a good prompt.", // Oh mon Dieu ! Quel bon prompt (Dog/God).
+    "🌑 I’m feeling vine-tage today.", // Je me sens "vigne-tage" aujourd'hui (jeu de mot vigne/vintage pour le côté gothique).
+    "🎸 Smells like Teen Prompt.", // Ça sent le prompt d'ado (clin d'oeil à Nirvana/Nights).
+    "🎨 You’re drawing me crazy!", // Tu me rends dingue / tu me dessines dingue (draw/drive).
+    "🍪 To the window, to the wall, to the cookie jar.", // Jusqu'à la fenêtre, au mur, au pot à cookies (réf. rap/grunge).
+    "🍎 Fiona Apple a day keeps the blocks away.", // Une Fiona Apple par jour éloigne le blocage créatif.
+    "🐾 Pomsky-tivity only!", // "Pomsky-tivité" uniquement (positivity).
+    "🍂 Fall-ing in love with AI.", // En train de tomber amoureux de l'IA (jeu de mot Fall/Automne).
+    "🕷️ Web designer? No, I'm a Web-weaver.", // Designer web ? Non, je tisse des toiles (ambiance gothique).
+    "🧛 Bittersweet Symphony? No, Bitter-sweet Prompt.", // Symphonie aigre-douce ? Non, prompt aigre-doux.
+    "🍪 Crumbs of inspiration everywhere.", // Des miettes d'inspiration partout.
+    "🐾 Paws-and-reflect on your art.", // Fais une pause et réfléchis à ton art (paws/pause - pattes/pause).
+    "🕯️ Don't be afraid of the dark-art.", // N'aie pas peur de l'art sombre (dark heart/dark art).
+    "🦋 Extraordinary Machine... for art.", // Une machine extraordinaire... pour l'art (réf. Fiona Apple).
+    "🍁 Un-be-leaf-able creativity!", // Une créativité incroyable ! (leaf/lievable).
+    "💀 Grateful Dead-lines.", // Des dates de rendu (morts) reconnaissants (jeu de mot sur le groupe).
+    "🐕 Howl you doing today?", // Comment ça va aujourd'hui ? (howl/how - hurlement/comment).
+    "🎨 Hue-ston, we have a problem.", // Houston, on a un problème (Hue/Houston - teinte/Houston).
+    "🥐 Goth-ic? More like Goth-chic.", // Gothique ? Plutôt Goth-chic.
+    "🖤 Dark mode: ON. Creativity: LOUD.", // Mode sombre activé. Créativité à fond.
+    "🥧 Cutie-pie? No, Pomsky-pie.", // Petit chou ? Non, tourte au Pomsky.
+    "🍪 A cookie a day keeps the artist's block away.", // Un cookie par jour éloigne le blocage.
+    "🎨 El arte no duerme.", // L'art ne dort pas.
+    "🍪 Un rincón para mis galletas.", // Un coin pour mes cookies.
+    "🍂 Otoño en el alma.", // L'automne dans l'âme.
+    "🐾 Pequeño lobo, gran artista.", // Petit loup, grand artiste (pour le Pomsky).
+    "🌑 Sombras y pinceles.", // Ombres et pinceaux.
+    "🍪 Galleta o trato.", // Un cookie ou un sort (jeu de mot sur truco o trato / Halloween).
+    "🎻 La vida es un lienzo.", // La vie est une toile.
+    "🕯️ Luz en la oscuridad.", // De la lumière dans l'obscurité.
+    "🍁 Hojas muertas, ideas vivas.", // Feuilles mortes, idées vivantes.
+    "🐕 Mi Pomsky es mi musa.", // Mon Pomsky est ma muse.
+    "🖤 Estilo gótico, corazón de oro.", // Style gothique, cœur d'or.
+    "🎸 Grunge bajo la lluvia.", // Grunge sous la pluie.
+    "🎨 Pinta tu propio destino.", // Peins ton propre destin.
+    "🕸️ Tejiendo sueños imposibles.", // En tissant des rêves impossibles (réf. toile d'araignée).
+    "🥐 Quédate un ratito más.", // Reste encore un petit moment.
+    "🦇 Creatividad de medianoche.", // Créativité de minuit.
+    "☕ Café, arte y melancolía.", // Café, art et mélancolie.
+    "📜 Versos perdidos, prompts encontrados.", // Vers perdus, prompts trouvés.
+    "🐾 Huellas de amor y tinta.", // Empreintes d'amour et d'encre.
+    "🐺 Salvaje y creativo.", // Sauvage et créatif.
+    "🌲 Susurros en el bosque.", // Murmures dans la forêt.
+    "🍪 Dulce inspiración.", // Douce inspiration.
+    "🥀 La belleza de lo efímero.", // La beauté de l'éphémère.
+    "🎨 Color por fuera, grunge por dentro." // Couleur à l'extérieur, grunge à l'intérieur.
+  ]
+}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
   ]
 }
